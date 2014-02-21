@@ -6,6 +6,10 @@ import triangles.Polyangle;
 import vectors.TheVector;
 import java.util.*;
 
+/**
+ *
+ * @author Матвей
+ */
 public class Parabola {
 
     private final double ROUND_KOEF = 0.0000000001;
@@ -14,6 +18,10 @@ public class Parabola {
     private Point2D focus;
     private Line direct;
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         Point2D intersect[] = {new Point(0,0), new Point(1, -1)};
         Point2D foc = new Point(1, 2);
@@ -47,8 +55,13 @@ public class Parabola {
         Point2D blackAnswer[] = para.getIntersection(inters);
         System.out.println(Arrays.toString(blackAnswer));
     }
-    //TODO: разобраться с этой портянкй и перетащить в 
+    //TODO: разобраться с этой портянкой и перетащить в соответствующее ей место.
 
+    /**
+     * Стандартный контруктр для параболы. 
+     * @param focus фокус параболы.
+     * @param direct директриса параболы.
+     */
     public Parabola(Point2D focus, Line direct) {
         this.focus = focus;
         this.direct = direct;
@@ -56,18 +69,36 @@ public class Parabola {
                 + direct.getC()) / StrictMath.sqrt(StrictMath.pow(direct.getA(), 2) + StrictMath.pow(direct.getB(), 2)));
     }
 
+    /**
+     * Доступ к фкальному параемтру параболы.
+     * @return фокальный параметр.
+     */
     public double getP() {
         return p;
     }
 
+    /**
+     * Доступ к фокусу параболы.
+     * @return фокус параболы.
+     */
     public Point2D getFocus() {
         return focus;
     }
 
+    /**
+     * Доступ к директрисе параболы.
+     * @return директриса параболы.
+     */
     public Line getDirect() {
         return direct;
     }
 
+    /**
+     * Нахождение пересечения параболы с прямой. NB: применимо только тогда, когда параболу можно описать квадратным уравнением.
+     * @param l прямая-секущая.
+     * @return массив точек-пересечений. NB: возмжны null значения, нужно отследить и оттестировать все плохие случаи.
+     */
+    //TODO: разобраться с "плхими" случаями, внести в документацию.
     protected Point2D[] getIntersection(Line l) {
         Point2D apex = this.getApex();
         double a = l.getA();
@@ -104,6 +135,14 @@ public class Parabola {
         return answer;
     }
 
+    /**
+     * Нахождение пересечений с многоугольником.
+     * @param pol многоугольник.
+     * @param direct директриса параболы.
+     * @param focus фокус параболы.
+     * @return массив пересечний с многоугольником. NB: протестировать вырожденный случаи.
+     */
+    //TODO: протестировать вырожденные случаи.
     public static Point2D[] getPolIntersection(Polyangle pol, Point2D[] direct, Point2D focus) {
         Point2D[][] sect = pol.breakTo();
         ArrayList<Point2D> black = new ArrayList<>(sect.length * 2);
@@ -122,6 +161,10 @@ public class Parabola {
         return ans;
     }
 
+    /**
+     * Нахождение вершины параболы.
+     * @return вершина парабола.
+     */
     public Point2D.Double getApex() {
         TheVector normal = direct.getNormal();
         Point2D secP = normal.getOtherPoint(focus, true);
@@ -131,6 +174,13 @@ public class Parabola {
         return apex;
     }
 
+    /**
+     * Нахождение фокального параметра по заданным фокусу и директрисе.
+     * @param focus фокус параболы.
+     * @param direct директриса параболы.
+     * @return вершина параболы. NB: не тестирован граничный случай.
+     */
+    //TODO: протестировать вырожденный случай.
     public static double getP(Point2D focus, Line direct) {
         double p = (StrictMath.abs(direct.getA() * focus.getX() + direct.getB() * focus.getY()
                 + direct.getC()) / StrictMath.sqrt(StrictMath.pow(direct.getA(), 2) + StrictMath.pow(direct.getB(), 2)));
