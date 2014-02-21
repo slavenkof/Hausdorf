@@ -475,8 +475,8 @@ public class TheVectorTest {
             new Point(5, 3)};
         TheVector expResult[] = new TheVector[10];
         Arrays.fill(expResult, new TheVector(0, 0));
-        for (int i = 0; i < p.length; i++) {
-            assertArrayEquals(expResult, TheVector.getUCDistanceVector(pol, p[i]));
+        for (Point2D p1 : p) {
+            assertArrayEquals(expResult, TheVector.getUCDistanceVector(pol, p1));
         }
     }
 
