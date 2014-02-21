@@ -10,6 +10,7 @@ public class Parabola {
 
     private final double ROUND_KOEF = 0.0000000001;
     private double p;
+    //TODO: отследить поведение Transform При всяких действиях. Является ли этот объект иммутабельным?
     private Point2D focus;
     private Line direct;
 
@@ -46,6 +47,7 @@ public class Parabola {
         Point2D blackAnswer[] = para.getIntersection(inters);
         System.out.println(Arrays.toString(blackAnswer));
     }
+    //TODO: разобраться с этой портянкй и перетащить в 
 
     public Parabola(Point2D focus, Line direct) {
         this.focus = focus;
