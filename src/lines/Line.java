@@ -125,7 +125,7 @@ public class Line {
         Parabola para = new Parabola(foc, direc);
         log log = new log();
         Point2D newCenter = para.getApex();
-        log.centerMove = new Point2D.Double(-newCenter.getX(), -newCenter.getY());
+        log.centreMove = new Point2D.Double(-newCenter.getX(), -newCenter.getY());
         direc = Transform.move(direc, newCenter);
         foc = Transform.move(foc, newCenter);
         inters = Transform.move(inters, newCenter);
@@ -139,14 +139,14 @@ public class Line {
         if ((blackAnswer[0] != null) && !(Double.isNaN(blackAnswer[0].getX()))
                 && !(Double.isNaN(blackAnswer[0].getY()))) {
             Transform.roll(blackAnswer[0], log.theta);
-            Transform.move(blackAnswer[0], log.centerMove);
+            Transform.move(blackAnswer[0], log.centreMove);
         } else {
             blackAnswer[0] = null;
         }
         if ((blackAnswer[0] != null) && !(Double.isNaN(blackAnswer[1].getX()))
                 && !(Double.isNaN(blackAnswer[1].getY()))) {
             Transform.roll(blackAnswer[1], log.theta);
-            Transform.move(blackAnswer[1], log.centerMove);
+            Transform.move(blackAnswer[1], log.centreMove);
         } else {
             blackAnswer[1] = null;
         }
