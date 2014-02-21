@@ -7,6 +7,15 @@ import triangles.Computer;
 import triangles.Polyangle;
 import vectors.TheVector;
 
+/**
+ * Генерация невыпуклого многоугольника. Генерирует заведомо корректные
+ * многоульники для работы оббщенного алгоритма оптимизации положения
+ * многоугольников. Метод заключается в генерации двух случайных произвольных
+ * многоугольникови последующем их совмещении. Результирующий многоугольник
+ * является объединением двух исходных.
+ *
+ * @author Матвей
+ */
 public class UCGenerator implements PolGenerator {
 
     @Override
@@ -21,11 +30,11 @@ public class UCGenerator implements PolGenerator {
         double y = 0;
         for (int i = 0; i < points.size(); i++) {
             Point2D p = points.get(i);
-            x = x + p.getX();
-            y = x + p.getY();
+            x += p.getX();
+            y += p.getY();
         }
-        x = x / points.size();
-        y = y / points.size();
+        x /= points.size();
+        y /= points.size();
         TheVector move = new TheVector(new Point2D[]{new Point2D.Double(x, y), new Point2D.Double()});
         for (int i = 0; i < points.size(); i++) {
             Point2D p = points.get(i);
@@ -37,7 +46,7 @@ public class UCGenerator implements PolGenerator {
         Computer.pointsSortAngle(aps);
         Polyangle answer = new Polyangle(aps, true);
         answer.translate(move);
-        
+
         if (!answer.isConvex()) {
             return answer;
         } else {
