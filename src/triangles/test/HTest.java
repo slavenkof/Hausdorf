@@ -8,8 +8,18 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
+/**
+ * Создание "картинки с точечками" для заданной пары многоугольников.
+ * @author Матвей
+ */
 public class HTest {
 
+    /**
+     * 
+     * @param args
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public static void main(String[] args) throws FileNotFoundException, IOException {
         String a = "C:/try/2_PolA2.txt";
         String b = "C:/try/2_PolB2.txt";
