@@ -3,7 +3,6 @@ package lines;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ParabolaTest {
