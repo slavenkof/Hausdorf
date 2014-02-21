@@ -33,7 +33,7 @@ public class Parabola {
         Point2D newCenter = para.getApex();
         System.out.println(newCenter);
         System.out.println();
-        log.centerMove = new Point2D.Double(-newCenter.getX(), -newCenter.getY());
+        log.centreMove = new Point2D.Double(-newCenter.getX(), -newCenter.getY());
         direc = Transform.move(direc, newCenter);
         foc = Transform.move(foc, newCenter);
         inters = Transform.move(inters, newCenter);
