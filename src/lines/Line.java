@@ -12,7 +12,6 @@ import vectors.TheVector;
  * двум точкам, нахождения пересечения двух прямых, восстановления уравнения
  * серединного перепендикуляра отрезка, восстановление уравнения биссектрисы.
  *
- * @author Славенко Матвей slavenkofm@yandex.ru
  */
 public class Line {
 
@@ -36,7 +35,7 @@ public class Line {
 
     /**
      *
-     * @return
+     * @return a
      */
     public double getA() {
         return A;
@@ -44,7 +43,7 @@ public class Line {
 
     /**
      *
-     * @return
+     * @return b
      */
     public double getB() {
         return B;
@@ -52,7 +51,7 @@ public class Line {
 
     /**
      *
-     * @return
+     * @return c
      */
     public double getC() {
         return C;
@@ -78,7 +77,7 @@ public class Line {
      * Возвращает угол наклона прямой по отношению к оси OX. Угол выражен в
      * радианах.
      *
-     * @return угол наклона прямой по отношению к оси OX.
+     * @return угол наклона прямой по отношению к оси OX в радианах.
      */
     public double getRAngle() {
         if (Math.abs(B) < ROUND_KOEF) {
@@ -90,23 +89,37 @@ public class Line {
         return (StrictMath.atan(-(A / B)));
     }
 
+    /**
+     * Метод для получения направляющего вектора прямой.
+     *
+     * @return направляющий вектр прямой.
+     */
     public TheVector getDirection() {
         return new TheVector(new double[]{-B, A});
     }
 
+    /**
+     * Метод для получения нормали к прямой.
+     *
+     * @return нормаль к прямой.
+     */
     public TheVector getNormal() {
         return new TheVector(new double[]{A, B});
     }
 
     /**
+     * Метод для нахождения пересечения прямой и параблы, заданной, возможно,
+     * нестандартно.
      *
-     * @param intersect
-     * @param direct
-     * @param focus
-     * @return
+     * @param line прямая-секущая.
+     * @param direct директриса пересекаемой параболы.
+     * @param focus фокус пересекаемой параболы.
+     * @return массив точек пересечения с параболой. NB: возможны null значения,
+     * их нужно отследить и внести сюда.
      */
-    public static Point2D[] findPoint(Point2D[] intersect, Point2D[] direct, Point2D focus) {
-        Line inters = Line.approximate(intersect[0], intersect[1]);
+    //TODO: разобраться с "плохими" случаями, внести их в документацию.
+    public static Point2D[] findPoint(Point2D[] line, Point2D[] direct, Point2D focus) {
+        Line inters = Line.approximate(line[0], line[1]);
         Point2D foc = (Point2D) focus.clone();
         Line direc = Line.approximate(direct[0], direct[1]);
         Parabola para = new Parabola(foc, direc);
@@ -137,10 +150,10 @@ public class Line {
         } else {
             blackAnswer[1] = null;
         }
-        if ((blackAnswer[0] == null) || (!(Computer.sectContains(intersect, blackAnswer[0])))) {
+        if ((blackAnswer[0] == null) || (!(Computer.sectContains(line, blackAnswer[0])))) {
             blackAnswer[0] = null;
         }
-        if ((blackAnswer[1] == null) || (!(Computer.sectContains(intersect, blackAnswer[1])))) {
+        if ((blackAnswer[1] == null) || (!(Computer.sectContains(line, blackAnswer[1])))) {
             blackAnswer[1] = null;
         }
         return blackAnswer;
@@ -151,8 +164,10 @@ public class Line {
      *
      * @param fp первый отрезок, заданный своими граничными точками.
      * @param sp второй отрезок, заданный своими граничными точками.
-     * @return уравнение прямой, содержащее биссектрису.
+     * @return уравнение прямой, содержащее биссектрису. NB: поведение на
+     * вырожденных случаях неизвестно.
      */
+    //TODO: протестировать случай совпадающих отрезкв, прочие вырожденные случаи.
     public static Line getBis(Point2D[] fp, Point2D[] sp) {
         TheVector one = new TheVector(fp);
         TheVector two = new TheVector(sp);
@@ -170,9 +185,11 @@ public class Line {
      * Метод, позволяющий получить решение системы линейных уравнений.
      *
      * @param l1 первая прямая.
-     * @param l2 вторая прямаая.
-     * @return Точка пересечения двух прямых.
+     * @param l2 вторая прямая.
+     * @return Точка пересечения двух прямых. NB: вырожденные случаи не
+     * тестированы.
      */
+    //TODO: тест на параллельные прямые, совпадающие.
     public static Point2D.Double lineSystem(Line l1, Line l2) {
         double a = l1.getA();
         double b = l1.getB();
@@ -192,8 +209,10 @@ public class Line {
      * Метод, возвращающий уравнение серединного перепендикуляра к отрезку.
      *
      * @param p отрезок, заданный координатами своих граничных точек.
-     * @return уравнение серединного перпендикуляра к отрезку.
+     * @return уравнение серединного перпендикуляра к отрезку. NB: отследить
+     * вырожденные случаи.
      */
+    //TODO: вырожденный случай нужно протестировать.
     public static Line getMPerpen(Point2D[] p) {
         double x = (p[0].getX() + p[1].getX()) / 2;
         double y = (p[0].getY() + p[1].getY()) / 2;
@@ -206,6 +225,15 @@ public class Line {
         return answer;
     }
 
+    /**
+     * Нахождение пересечения прямой и отрезка.
+     *
+     * @param sect пересекаемый отрезок.
+     * @param line секущая.
+     * @return точка пересечения. NB: возможны null-значения, вырожденные случаи
+     * не тестировались.
+     */
+    //TODO: протестировать вырожденные задачи.
     public static Point2D getSectIntersection(Point2D[] sect, Line line) {
         Line isect = Line.approximate(sect[0], sect[1]);
         Point2D answer = Line.lineSystem(line, isect);
@@ -215,6 +243,14 @@ public class Line {
         return null;
     }
 
+    /**
+     * Нахождение точек пересечения с многоугольником.
+     *
+     * @param pol пересекаемый многоугольник.
+     * @param line секущая.
+     * @return массив точек-пересечений. NB: не тестированы различные
+     * вырожденные случаи. //TODO: Протестировать вырожденные случаи!
+     */
     public static Point2D[] getPolIntersection(Polyangle pol, Line line) {
         Point2D sect[][] = pol.breakTo();
         ArrayList<Point2D> answer = new ArrayList<>(sect.length);
@@ -243,6 +279,14 @@ public class Line {
         return hash;
     }
 
+    /**
+     * NB: Деления, возможность исключений, переписать и протестировать.
+     *
+     * @param obj
+     * @return
+     */
+    //TODO: переписать. Не понятно поведение на нулях.
+    @Deprecated
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -269,6 +313,6 @@ public class Line {
 
     @Override
     public String toString() {
-        return A + "*X+" + B + "*Y+" + C + " = 0";
+        return A + " * X + " + B + " * Y + " + C + " = 0";
     }
 }
