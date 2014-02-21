@@ -9,6 +9,7 @@ import java.awt.geom.Point2D;
  * @author Матвей
  */
 public class Transform {
+    //TODO: покрыть тестами.
 
     /**
      * Поворот прямой на заданный угол
