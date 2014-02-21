@@ -7,18 +7,27 @@ import triangles.Polyangle;
 import triangles.gen.*;
 import vectors.TheVector;
 
+/**
+ * Клон класса Test, применяется для профилирования.
+ * @author Матвей
+ */
 public class Test1 {
 
-    LogLeader leader;
-    int seed;
-    PolGenerator a;
-    PolGenerator b;
-    int[] par;
-    Polyangle A;
-    Polyangle B;
-    Random ran;
-    int i = 0;
+    private final LogLeader leader;
+    private final int seed;
+    private final PolGenerator a;
+    private final PolGenerator b;
+    private final int[] par;
+    private Polyangle A;
+    private Polyangle B;
+    private final Random ran;
+    private int i = 0;
 
+    /**
+     *
+     * @param args
+     * @throws FileNotFoundException
+     */
     public static void main(String[] args) throws FileNotFoundException {
         Test1 t = new Test1(123456789, new UCGenerator(), new UCGenerator(),
                 new String[]{"D:/Кольцо/Проект/R/rubbish/", "D:/Кольцо/Проект/R/rubbish/", "D:/Кольцо/Проект/R/rubbish/"},
@@ -32,6 +41,15 @@ public class Test1 {
         t.die();
     }
 
+    /**
+     *
+     * @param Seed
+     * @param A
+     * @param B
+     * @param paths
+     * @param para
+     * @throws FileNotFoundException
+     */
     public Test1(int Seed, PolGenerator A, PolGenerator B, String[] paths, int[] para) throws FileNotFoundException {
         seed = Seed;
         a = A;
@@ -41,7 +59,7 @@ public class Test1 {
         ran = new Random(seed);
     }
 
-    public void test() throws FileNotFoundException {
+    private void test() throws FileNotFoundException {
         System.out.println("Test " + i);
         while (A == null) {
             A = a.gen(par[0], ran.nextInt(), par[1], par[2]);
@@ -66,17 +84,17 @@ public class Test1 {
         System.out.println("--------------");
     }
 
-    public void close() {
+    private void close() {
         leader.close();
         A = null;
         B = null;
     }
 
-    public void prepare() {
+    private void prepare() {
         leader.postInf(seed, Computer.ROUND_KOEF, par[1], par[2], par[0]);
     }
 
-    public void die() {
+    private void die() {
         leader.die();
     }
 }
