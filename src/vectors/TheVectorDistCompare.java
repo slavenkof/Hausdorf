@@ -7,7 +7,6 @@ import static triangles.Computer.ROUND_KOEF;
  * Сортировка векторов по их длине.
  * @author Матвей
  */
-//TODO: переписать через квадрат длины.
 public class TheVectorDistCompare implements Comparator<TheVector> {
 
     @Override

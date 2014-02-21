@@ -270,7 +270,6 @@ public class TheVector implements Cloneable {
      *
      * @return величина, численно равная скалярному квадрату этого вектора.
      */
-    //TODO: Изменить метод вычисления
     public double scalarSq() {
         return Math.pow(getVLength(), 2);
     }
@@ -355,7 +354,6 @@ public class TheVector implements Cloneable {
      * @return логическая величина: <code>true</code>, если принадлежит * * и
      * <code>false</code>, если не принадлежит.
      */
-    //TODO: Разобраться WTF?
     public static boolean insideOf(TheVector vectorss[]) {
         HashSet<TheVector> vecs = new HashSet<>();
         vecs.addAll(Arrays.asList(vectorss));
@@ -395,11 +393,10 @@ public class TheVector implements Cloneable {
     /**
      * Функция-обертка для получения расстояния Хаусдорфа.
      *
-     * @param stab -стабильный многоугольник.
-     * @param move - подвижный многоугольник.
+     * @param stab стабильный многоугольник.
+     * @param move подвижный многоугольник.
      * @return массив векторов, на которых достигается расстояние Хаусдорфа.
      */
-    //TODO: Разобраться WTF?
     public static TheVector[] getHDistance(Polyangle stab, Polyangle move) {
         if (!(stab.isConvex()) || !(move.isConvex())) {
             return TheVector.getUCHDistance(stab, move);
@@ -414,7 +411,6 @@ public class TheVector implements Cloneable {
      * @param move
      * @return
      */
-    //TODO: Разобраться со свапами, иначе это ужас какой-то...
     public static TheVector[] getUSHDistance(Polyangle stab, Polyangle move) {
         if (!(stab.isConvex()) || !(move.isConvex())) {
             return TheVector.getUSUCHDistance(stab, move);
@@ -504,7 +500,6 @@ public class TheVector implements Cloneable {
      *
      *
      */
-    //TODO:Объединить с аналогичым выпуклым.
     public static TheVector[] getUCDistanceVector(Polyangle plan, Point2D p) {
         Object pointss[] = plan.getApexs().toArray();
         Point2D points[] = new Point2D[pointss.length];
@@ -558,7 +553,6 @@ public class TheVector implements Cloneable {
      * @param move второй многоугольник.
      * @return массив векторов, на которых достигается расстояние Хаусдорфа.
      */
-    //TODO: Разобраться с переворачиваниями.
     public static TheVector[] getCHDistance(Polyangle stab, Polyangle move) {
         TheVector moveStab[][] = TheVector.getCDistanceVector(move, stab);
         TheVector stabMove[][] = TheVector.getCDistanceVector(stab, move);
@@ -587,7 +581,6 @@ public class TheVector implements Cloneable {
      * @param move второй многоугольник.
      * @return массив векторов, на которых достигается расстояние Хаусдорфа.
      */
-    //TODO: Разобраться с переворачиваниями.
     public static TheVector[] getUSCHDistance(Polyangle stab, Polyangle move) {
         TheVector moveStab[][] = TheVector.getCDistanceVector(move, stab);
         TheVector stabMove[][] = TheVector.getCDistanceVector(stab, move);
