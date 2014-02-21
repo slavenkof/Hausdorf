@@ -13,6 +13,7 @@ import triangles.Polyangle;
  *
  * @author Матвей
  */
+//TODO: перенести всю логику генерации многоугольника внутрь этого класса.
 public class CGenerator implements PolGenerator {
 
     /**
