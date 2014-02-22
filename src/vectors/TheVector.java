@@ -606,7 +606,6 @@ public class TheVector implements Cloneable {
      * точностью, определяемой константой
      * <code>triangles.Computer.ROUND_KOEF</code>.
      */
-    //TODO: Проанализировать, оптимизировать.
     public static TheVector[] getMin(TheVector[] source) {
         TheVector src[] = source.clone();
         TheVectorDistCompare comp = new TheVectorDistCompare();
@@ -632,7 +631,6 @@ public class TheVector implements Cloneable {
      * @return массив векторов с максимальной длиной. Точность сравнения
      * определяет константа <code>triangles.Computer.ROUND_KOEF</code>.
      */
-    //TODO: Пранализировать, оптимизировать
     public static TheVector[] getMax(TheVector[] source) {
         TheVector src[] = source.clone();
         TheVector m = new TheVector(0, 0);
@@ -661,7 +659,6 @@ public class TheVector implements Cloneable {
      * @param move от которого ищем расстояния.
      * @return массив точек, пересечения с биссектрисами.
      */
-    //TODO: Проанализировать, оптимизировать.
     private static Point2D[] getBisPoints(Polyangle stab, Polyangle move) {
         Point2D sects[][] = stab.breakTo();
         Point2D pairs[][][] = new Point2D[(sects.length * (sects.length - 1)) / 2][2][2];
@@ -876,7 +873,6 @@ public class TheVector implements Cloneable {
      * @param move - второй многоугольник.
      * @return массив векторов, на которых достигается расстояние Хаусдорфа.
      */
-    //TODO: разобратьс с свапами.
     public static TheVector[] getUCHDistance(Polyangle stab, Polyangle move) {
         TheVector MSDis[] = TheVector.getUCDistanceVector(stab, move);
         TheVector SMDis[] = TheVector.getUCDistanceVector(move, stab);
@@ -894,7 +890,6 @@ public class TheVector implements Cloneable {
      * @param move
      * @return
      */
-    //TODO: Разобраться со свапами, иначе это ужас какой-то...
     public static TheVector[] getUSUCHDistance(Polyangle stab, Polyangle move) {
         TheVector MSDis[] = TheVector.getUCDistanceVector(stab, move);
         TheVector SMDis[] = TheVector.getUCDistanceVector(move, stab);
