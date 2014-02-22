@@ -8,13 +8,6 @@ import java.util.*;
 import java.util.regex.Pattern;
 import vectors.TheVector;
 
-/* TODO:
- * Нужно:
- * + убрать quantOfPoints;
- * + убрать ArrayList в apexs;
- * + вынести алгоритм Грэхема в отдельный метод;
- * + переделать randGen().
- */
 /**
  * Этот класс реализует представление многоугольника. Он спроектирован с
  * использованием композиции точек. В класс были включены удобные методы для
@@ -139,6 +132,7 @@ public class Polyangle implements Cloneable {
     /**
      * Метод для получения прямоугольника, полностью содержащего текущий
      * многоугольник.
+     *
      * @return объект Rectangle, описывающий границы текущего многоугольника.
      */
     public Rectangle getBounds() {
@@ -232,7 +226,6 @@ public class Polyangle implements Cloneable {
      * @param height
      * @return случайный выпуклый многоугольник.
      */
-    //TODO:Перекинуть в генератор
     public static Polyangle randGen(int qOfP, int seed, int width, int height) {
         Random rand = new Random(seed);
         int quantityOfPoints = qOfP;
@@ -307,12 +300,11 @@ public class Polyangle implements Cloneable {
     }
 
     /**
-     * Чрезвычайно сырой алгоритм подсчета альфа-выпуклости. Работает только
-     * с многоугольниками, заданными в направлении обхода против часовой стрелки.
+     * Чрезвычайно сырой алгоритм подсчета альфа-выпуклости. Работает только с
+     * многоугольниками, заданными в направлении обхода против часовой стрелки.
+     *
      * @return альфа-выпуклсть данного многоугольника.
      */
-    //TODO: Разобраться с направлением обхода.
-    //TODO: Реализовать более-менее общий алгоритм вычисления альфа-выпуклости.
     public double getAlpha() {
         Point2D ps[] = getUCPoints();
         double min = Math.PI;
@@ -334,12 +326,13 @@ public class Polyangle implements Cloneable {
     }
 
     /**
-     * Очень сырой алгоритм нахождения невыпуклых точек. Работает только с 
+     * Очень сырой алгоритм нахождения невыпуклых точек. Работает только с
      * многоугольниками, заданными против часовой стрелки.
-     * @return массив с невыпуклыми вершинами.
+     *
+     * @return массив с невыпуклыми вершинами. NB: Сейчас работает только с
+     * обходом вершин против часовой стрелки.
      */
-    public Point2D[] getUCPoints() {//TODO: Организовать учет обхода вершин.
-        //NB: Сейчас работает только с обходом вершин против часовой стрелки.
+    public Point2D[] getUCPoints() {
         ArrayList<Point2D> ps = new ArrayList<>();
         for (int i = 1; i < apexs.size() - 1; i++) {
             TheVector a = new TheVector(apexs.get(i), apexs.get(i - 1));
@@ -360,8 +353,10 @@ public class Polyangle implements Cloneable {
 
     /**
      * Метод для чтения многоугольника из файла
+     *
      * @param file файл для чтения.
-     * @param needSort сортировка по полярному углу при построении многоугольника.
+     * @param needSort сортировка по полярному углу при построении
+     * многоугольника.
      * @return многоугольник, заданный в файле.
      */
     public static Polyangle read(File file, boolean needSort) {
@@ -388,6 +383,7 @@ public class Polyangle implements Cloneable {
 
     /**
      * Метод для чтения всех многоугольников из файла.
+     *
      * @param file файл для чтения.
      * @param needSort сортировка при построении многоугольника.
      * @return массив многоугольников, описанных в файле.
@@ -422,13 +418,14 @@ public class Polyangle implements Cloneable {
         }
         return answer;
     }
+
     /**
-     * Служебный метод, предназначен для очистки строк т шелухи и выделения чисел.
+     * Служебный метод, предназначен для очистки строк т шелухи и выделения
+     * чисел.
+     *
      * @param str строка для очистки.
      * @return массив чищенных строк
      */
-    //TODO: разобраться, что он там чистит/возвращает.
-
     private static String[] cleanNumbers(String str) {
         str = str.replaceAll("\\[", "");
         str = str.replaceAll("\\]", "");
@@ -451,15 +448,14 @@ public class Polyangle implements Cloneable {
         this.apexs.toArray(pp);
         return new Polyangle(pp, sorted);
     }
+
     /**
      * Служебный метод, часть алгоритма Грэхема.
+     *
      * @param fulc
      * @param test
-     * @return 
+     * @return
      */
-    //TODO: разобраться, что там происходит.
-    //TODO: избавиться нафиг от этого метода.
-
     private static boolean needDelete(TheVector fulc, TheVector test) {
         return TheVector.pseudoScalarDerivate(new TheVector[]{fulc, test}) >= 0;
     }

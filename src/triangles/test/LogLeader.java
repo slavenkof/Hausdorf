@@ -152,7 +152,6 @@ public class LogLeader {
      * @param Haus расстояние после оптимизации субградиентным методом.
      * @param Grid расстояние после перебора.
      */
-    //TODO: Добавить вывод альфа-выпуклсти для каждого многоугольника.
     public void postImp(double Haus, double Grid) {
         Imp.post("     Test № " + test);
         Imp.post("     Files:");

@@ -8,7 +8,6 @@ import java.util.Comparator;
  * @author Матвей
  */
 public class PolarAngleCompChet implements Comparator<Point2D> {
-    //TODO: переписать!!!
 
     private final Point2D fulcrum;
 

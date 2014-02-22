@@ -14,7 +14,6 @@ public class Parabola {
 
     private final double ROUND_KOEF = 0.0000000001;
     private double p;
-    //TODO: отследить поведение Transform При всяких действиях. Является ли этот объект иммутабельным?
     private Point2D focus;
     private Line direct;
 
@@ -55,7 +54,6 @@ public class Parabola {
         Point2D blackAnswer[] = para.getIntersection(inters);
         System.out.println(Arrays.toString(blackAnswer));
     }
-    //TODO: разобраться с этой портянкой и перетащить в соответствующее ей место.
 
     /**
      * Стандартный контруктр для параболы. 
@@ -98,7 +96,6 @@ public class Parabola {
      * @param l прямая-секущая.
      * @return массив точек-пересечений. NB: возмжны null значения, нужно отследить и оттестировать все плохие случаи.
      */
-    //TODO: разобраться с "плхими" случаями, внести в документацию.
     protected Point2D[] getIntersection(Line l) {
         Point2D apex = this.getApex();
         double a = l.getA();
@@ -142,7 +139,6 @@ public class Parabola {
      * @param focus фокус параболы.
      * @return массив пересечний с многоугольником. NB: протестировать вырожденный случаи.
      */
-    //TODO: протестировать вырожденные случаи.
     public static Point2D[] getPolIntersection(Polyangle pol, Point2D[] direct, Point2D focus) {
         Point2D[][] sect = pol.breakTo();
         ArrayList<Point2D> black = new ArrayList<>(sect.length * 2);
@@ -180,7 +176,6 @@ public class Parabola {
      * @param direct директриса параболы.
      * @return вершина параболы. NB: не тестирован граничный случай.
      */
-    //TODO: протестировать вырожденный случай.
     public static double getP(Point2D focus, Line direct) {
         double p = (StrictMath.abs(direct.getA() * focus.getX() + direct.getB() * focus.getY()
                 + direct.getC()) / StrictMath.sqrt(StrictMath.pow(direct.getA(), 2) + StrictMath.pow(direct.getB(), 2)));

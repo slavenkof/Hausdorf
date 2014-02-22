@@ -117,7 +117,6 @@ public class Line {
      * @return массив точек пересечения с параболой. NB: возможны null значения,
      * их нужно отследить и внести сюда.
      */
-    //TODO: разобраться с "плохими" случаями, внести их в документацию.
     public static Point2D[] findPoint(Point2D[] line, Point2D[] direct, Point2D focus) {
         Line inters = Line.approximate(line[0], line[1]);
         Point2D foc = (Point2D) focus.clone();
@@ -167,7 +166,6 @@ public class Line {
      * @return уравнение прямой, содержащее биссектрису. NB: поведение на
      * вырожденных случаях неизвестно.
      */
-    //TODO: протестировать случай совпадающих отрезкв, прочие вырожденные случаи.
     public static Line getBis(Point2D[] fp, Point2D[] sp) {
         TheVector one = new TheVector(fp);
         TheVector two = new TheVector(sp);
@@ -189,7 +187,6 @@ public class Line {
      * @return Точка пересечения двух прямых. NB: вырожденные случаи не
      * тестированы.
      */
-    //TODO: тест на параллельные прямые, совпадающие.
     public static Point2D.Double lineSystem(Line l1, Line l2) {
         double a = l1.getA();
         double b = l1.getB();
@@ -212,7 +209,6 @@ public class Line {
      * @return уравнение серединного перпендикуляра к отрезку. NB: отследить
      * вырожденные случаи.
      */
-    //TODO: вырожденный случай нужно протестировать.
     public static Line getMPerpen(Point2D[] p) {
         double x = (p[0].getX() + p[1].getX()) / 2;
         double y = (p[0].getY() + p[1].getY()) / 2;
@@ -233,7 +229,6 @@ public class Line {
      * @return точка пересечения. NB: возможны null-значения, вырожденные случаи
      * не тестировались.
      */
-    //TODO: протестировать вырожденные задачи.
     public static Point2D getSectIntersection(Point2D[] sect, Line line) {
         Line isect = Line.approximate(sect[0], sect[1]);
         Point2D answer = Line.lineSystem(line, isect);
@@ -249,7 +244,7 @@ public class Line {
      * @param pol пересекаемый многоугольник.
      * @param line секущая.
      * @return массив точек-пересечений. NB: не тестированы различные
-     * вырожденные случаи. //TODO: Протестировать вырожденные случаи!
+     * вырожденные случаи.
      */
     public static Point2D[] getPolIntersection(Polyangle pol, Line line) {
         Point2D sect[][] = pol.breakTo();
@@ -285,7 +280,6 @@ public class Line {
      * @param obj
      * @return
      */
-    //TODO: переписать. Не понятно поведение на нулях.
     @Deprecated
     @Override
     public boolean equals(Object obj) {

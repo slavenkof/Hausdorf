@@ -117,7 +117,6 @@ public class Computer {
      * @param points массив точек, которые необходимо рассортировать.
      * @return отсортированный массив точек.
      */
-    //TODO:  в срочном порядке переписать со всеми входящими и покрыть тоннами тестов.
     public static Point2D[] pointsSortAngle(Point2D points[]) {
         Point2D act[] = points.clone();
         ArrayList<Point2D> operative = new ArrayList<>();
@@ -367,7 +366,6 @@ public class Computer {
      * @param log
      * @throws java.io.FileNotFoundException
      */
-    //TODO: переписать через Mover
     private static void exSearchOptimizeC(Polyangle stab, Polyangle move, Log log) throws FileNotFoundException {
         System.err.println("exSearchOptimizeC");
         Polyangle optimum;
@@ -419,7 +417,6 @@ public class Computer {
      * @param log
      * @throws java.io.FileNotFoundException
      */
-    //TODO: переписать через Mover
     private static void exSearchOptimizeUC(Polyangle stab, Polyangle move, Log log) throws FileNotFoundException {
         System.err.println("exSearchOptimizeUC");
         Polyangle optimum;
@@ -482,7 +479,7 @@ public class Computer {
     }
 
     /**
-     * Метод для склецки двумерного массива в один многомерный. Реализовано
+     * Метод для склейки двумерного массива в один многомерный. Реализовано
      * через <code>System.arraycopy</code>.
      *
      * @param arrays исходный массив.
@@ -503,13 +500,12 @@ public class Computer {
     }
 
     /**
-     * Метод для склецки двумерного массива в один многомерный. Реализовано
+     * Метод для склейки двумерного массива в один многомерный. Реализовано
      * через <code>System.arraycopy</code>.
      *
      * @param arrays исходный массив.
      * @return
      */
-    //TODO: переписать единым куском.
     public static TheVector[] mixArrays(TheVector[][] arrays) {
         int length = 0;
         for (TheVector[] array : arrays) {
@@ -548,6 +544,7 @@ public class Computer {
     /**
      * Метод служит для просчета диапазона точек, внутри которого необходимо
      * проводить перебор.
+     *
      * @param stab статичный многоугольник.
      * @param move подвижный многоугольник.
      * @return
@@ -563,6 +560,7 @@ public class Computer {
 
     /**
      * Метод для получения средней длины векторов в массиве.
+     *
      * @param vectors массив векторов.
      * @return средняя длина векторов в массиве.
      */
