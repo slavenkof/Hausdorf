@@ -1,5 +1,6 @@
 package lines;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.*;
 import triangles.Computer;
@@ -15,7 +16,7 @@ import vectors.TheVector;
  */
 public class Line {
 
-    private static final double ROUND_KOEF = 0.0000000001;
+    static final double ROUND_KOEF = 0.0000000001;
     private final double A;
     private final double B;
     private final double C;
@@ -58,7 +59,9 @@ public class Line {
     }
 
     /**
-     * Метод для восстановления уравнения прямой по двум точкам.
+     * Метод для восстановления уравнения прямой по двум точкам. В вырожденном
+     * случае (точки свпадают) взвращает уравнение с коэффициентами
+     * <code>(0, 0, 0)</code>.
      *
      * @param p1 первая точка прямой.
      * @param p2 вторая точка прямой.
@@ -159,12 +162,14 @@ public class Line {
     }
 
     /**
-     * Метод позволяющий получить уравнение биссектрисы двух отрезков.
+     * Метод позволяющий получить уравнение биссектрисы двух отрезков. Во всех
+     * вырожденных случаях (отрезки параллельны, совпадают, один из отрезков
+     * является точкой) возращается уравнение вида
+     * <code>NaN * X + NaN * Y + NaN = 0</code>.
      *
      * @param fp первый отрезок, заданный своими граничными точками.
      * @param sp второй отрезок, заданный своими граничными точками.
-     * @return уравнение прямой, содержащее биссектрису. NB: поведение на
-     * вырожденных случаях неизвестно.
+     * @return уравнение прямой, содержащее биссектрису.
      */
     public static Line getBis(Point2D[] fp, Point2D[] sp) {
         TheVector one = new TheVector(fp);
@@ -182,10 +187,19 @@ public class Line {
     /**
      * Метод, позволяющий получить решение системы линейных уравнений.
      *
+     * Существуют следующие вырожденные случаи:
+     * <ul>
+     * <li>Если прямые совпадают, то ответом является точка с координатами
+     * <code>(NaN, NaN).</code></li>
+     * <li>Если прямая 1 лежит ниже прямой два, то ответом является точка с
+     * координатами <code>(Infinity, Infinity).</li>
+     * <li>Если прямая 1 лежит ниже прямой два, то ответом является точка с
+     * координатами <code>(-Infinity, -Infinity).</li>
+     * </ul>
+     *
      * @param l1 первая прямая.
      * @param l2 вторая прямая.
-     * @return Точка пересечения двух прямых. NB: вырожденные случаи не
-     * тестированы.
+     * @return Точка пересечения двух прямых.
      */
     public static Point2D.Double lineSystem(Line l1, Line l2) {
         double a = l1.getA();
@@ -203,11 +217,12 @@ public class Line {
     }
 
     /**
-     * Метод, возвращающий уравнение серединного перепендикуляра к отрезку.
+     * Метод, возвращающий уравнение серединного перепендикуляра к отрезку. Во
+     * всех вырожденных случаях возвращает уравнение с коэффициентами
+     * <code>(0, 0, 0)</code>.
      *
      * @param p отрезок, заданный координатами своих граничных точек.
-     * @return уравнение серединного перпендикуляра к отрезку. NB: отследить
-     * вырожденные случаи.
+     * @return уравнение серединного перпендикуляра к отрезку.
      */
     public static Line getMPerpen(Point2D[] p) {
         double x = (p[0].getX() + p[1].getX()) / 2;
@@ -275,14 +290,16 @@ public class Line {
     }
 
     /**
-     * NB: Деления, возможность исключений, переписать и протестировать.
+     * Вроде все протестировано, однако тут какая-то совсем неведомая магия...
      *
      * @param obj
      * @return
      */
-    @Deprecated
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null) {
             return false;
         }
@@ -303,6 +320,14 @@ public class Line {
             return false;
         }
         return true;
+    }
+
+    public static void main(String[] args) {
+        Point[] a = new Point[]{
+            new Point(), new Point()
+        };
+
+        System.out.println(Line.getMPerpen(a));
     }
 
     @Override
