@@ -2,7 +2,6 @@ package vectors;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.io.File;
 import java.util.Arrays;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -403,16 +402,16 @@ public class TheVectorTest {
         p[4] = new Point(3, 4);
         p[5] = new Point(9, 1);
         TheVector etData[][] = new TheVector[6][3];
-        etData[0] = new TheVector[]{new TheVector(new int[]{-4, -5}),
-            new TheVector(new int[]{0, -3}),
+        etData[0] = new TheVector[]{new TheVector(new int[]{0, -3}),
+            new TheVector(new int[]{-4,-5}),
             new TheVector(new int[]{0, -3})};
         etData[1] = new TheVector[]{
-            new TheVector(new double[]{3.4615384615384617, -2.3076923076923075}),
+            new TheVector(new double[]{3.5999999999999996, -1.7999999999999998}),
             new TheVector(new double[]{4.0, -1.0}),
-            new TheVector(new double[]{3.5999999999999996, -1.7999999999999998})};
-        etData[2] = new TheVector[]{new TheVector(new double[]{1.0, -7.0}),
-            new TheVector(new double[]{6.972972972972973, -1.1621621621621614}),
-            new TheVector(new double[]{3.999999999999999, -4.000000000000001})};
+            new TheVector(new double[]{3.4615384615384617, -2.3076923076923075})};
+        etData[2] = new TheVector[]{new TheVector(new double[]{6.972972972972973, -1.1621621621621614}),
+            new TheVector(new double[]{3.999999999999999, -4.000000000000001}),
+            new TheVector(new double[]{1.0, -7.0})};
         etData[3] = new TheVector[]{new TheVector(new double[]{0, 0}),
             new TheVector(new double[]{0, 0}),
             new TheVector(new double[]{0, 0})};
@@ -420,8 +419,8 @@ public class TheVectorTest {
             new TheVector(new double[]{0, 0}),
             new TheVector(new double[]{0.0, 0})};
         etData[5] = new TheVector[]{new TheVector(new double[]{0, 0}),
-            new TheVector(new double[]{0, 0}),
-            new TheVector(new double[]{-7, 0})};
+            new TheVector(new double[]{-7, 0}),
+            new TheVector(new double[]{0, 0})};
         for (int i = 0; i < 6; i++) {
             assertArrayEquals(etData[i], TheVector.getDistanceVector(plans[i], p[i]));
         }
@@ -430,7 +429,7 @@ public class TheVectorTest {
 
     @Test
     public void testUCGetDistanceVector() {
-        System.out.println("UCGetDistance(polyangle+point)(6+2tests)");
+        System.out.println("UCGetDistance(polyangle+point)(6tests)");
         Polyangle plans[] = new Polyangle[6];
         plans[0] = new Polyangle(new int[]{4, 8, 2}, new int[]{3, 5, 3}, true);
         plans[1] = new Polyangle(new int[]{6, 5, 9}, new int[]{3, 1, 7}, true);
@@ -446,16 +445,17 @@ public class TheVectorTest {
         p[4] = new Point(3, 4);
         p[5] = new Point(9, 1);
         TheVector etData[][] = new TheVector[6][3];
-        etData[0] = new TheVector[]{new TheVector(new int[]{-4, -5}),
-            new TheVector(new int[]{0, -3}),
+        etData[0] = new TheVector[]{new TheVector(new int[]{0, -3}),
+            new TheVector(new int[]{-4, -5}),
             new TheVector(new int[]{0, -3})};
         etData[1] = new TheVector[]{
-            new TheVector(new double[]{3.4615384615384617, -2.3076923076923075}),
+            new TheVector(new double[]{3.5999999999999996, -1.7999999999999998}),
             new TheVector(new double[]{4.0, -1.0}),
-            new TheVector(new double[]{3.5999999999999996, -1.7999999999999998})};
-        etData[2] = new TheVector[]{new TheVector(new double[]{1.0, -7.0}),
-            new TheVector(new double[]{6.972972972972973, -1.1621621621621614}),
-            new TheVector(new double[]{3.999999999999999, -4.000000000000001})};
+            new TheVector(new double[]{3.4615384615384617, -2.3076923076923075})
+        };
+        etData[2] = new TheVector[]{new TheVector(new double[]{6.972972972972973, -1.1621621621621614}),
+            new TheVector(new double[]{3.999999999999999, -4.000000000000001}),
+            new TheVector(new double[]{1.0, -7.0})};
         etData[3] = new TheVector[]{new TheVector(new double[]{0, 0}),
             new TheVector(new double[]{0, 0}),
             new TheVector(new double[]{0, 0})};
@@ -463,21 +463,13 @@ public class TheVectorTest {
             new TheVector(new double[]{0, 0}),
             new TheVector(new double[]{0.0, 0})};
         etData[5] = new TheVector[]{new TheVector(new double[]{0, 0}),
-            new TheVector(new double[]{0, 0}),
-            new TheVector(new double[]{-7, 0})};
+            new TheVector(new double[]{-7, 0}),
+            new TheVector(new double[]{0, 0})
+        };
         for (int i = 0; i < 6; i++) {
             assertArrayEquals(etData[i], TheVector.getUCDistanceVector(plans[i], p[i]));
         }
         System.out.println("-------------------");
-        Polyangle pol = Polyangle.read(new File("C:/Users/Матвей/Documents/test/Computer/test2.txt"), true);
-        p = new Point2D[]{
-            new Point(3, 4),
-            new Point(5, 3)};
-        TheVector expResult[] = new TheVector[10];
-        Arrays.fill(expResult, new TheVector(0, 0));
-        for (Point2D p1 : p) {
-            assertArrayEquals(expResult, TheVector.getUCDistanceVector(pol, p1));
-        }
     }
 
     @Test
@@ -528,13 +520,13 @@ public class TheVectorTest {
             new Point(9, 1)}, true);
         TheVector etData1[][] = new TheVector[3][3];
         etData1[0] = new TheVector[]{
-            new TheVector(new double[]{-4.310344827586206, 1.724137931034483}),
-            new TheVector(new double[]{-3, 5}),
-            new TheVector(new double[]{-5, 0})};
-        etData1[1] = new TheVector[]{
             new TheVector(new double[]{-6.0344827586206895, 2.4137931034482762}),
             new TheVector(new double[]{-5, 5}),
             new TheVector(new double[]{-7, 0})};
+        etData1[1] = new TheVector[]{
+            new TheVector(new double[]{-4.310344827586206, 1.724137931034483}),
+            new TheVector(new double[]{-3, 5}),
+            new TheVector(new double[]{-5, 0})};
         etData1[2] = new TheVector[]{
             new TheVector(new double[]{-5, 0}),
             new TheVector(new double[]{-5, 0}),

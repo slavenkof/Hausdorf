@@ -3,9 +3,13 @@ package triangles;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
+import java.util.Random;
 
 public class ComputerTest {
 
@@ -23,23 +27,54 @@ public class ComputerTest {
         fail("The test case is a prototype.");
     }
 
-    @Ignore
+    /**
+     * Тест сортировки точек по полярному углу.
+     */
     @Test
     public void testPointsSortAngle() {
         System.out.println("pointsSortAngle");
-        Point2D[] points = null;
-        Point2D[] expResult = null;
-        Point2D[] result = Computer.pointsSortAngle(points);
-        assertArrayEquals(expResult, result);
-        fail("The test case is a prototype.");
+        Point2D[] points = new Point[]{
+            new Point(5, 0),
+            new Point(4, 4),
+            new Point(1, 1),
+            new Point(0, 4),
+            new Point(-1, 4),
+            new Point(-3, 2),
+            new Point(-3, 0),
+            new Point(0, -3),
+            new Point(5, -2),};
+        Point2D[] expResult = new Point[]{
+            new Point(5, 0),
+            new Point(1, 1),
+            new Point(4, 4),
+            new Point(0, 4),
+            new Point(-1, 4),
+            new Point(-3, 2),
+            new Point(-3, 0),
+            new Point(0, -3),
+            new Point(5, -2)
+        };
+        for (int i = 0; i < 50; i++) {
+            ArrayList<Point2D> p = new ArrayList<>();
+            p.addAll(Arrays.asList(points));
+            Collections.shuffle(p);
+            p.toArray(points);
+            Point2D[] result = Computer.pointsSortAngle(points);
+            assertArrayEquals(expResult, result);
+        }
+        System.out.println("-------------------");
     }
 
+    /**
+     * Тест проверки принадлежности выпуклому многоугольнику.
+     */
     @Test
     public void testContains() {
         System.out.println("contains(5+6 tests)");
         Polyangle pol = Polyangle.read(new File("C:/Users/Матвей/Documents/test/Computer/test3.txt"), true);
         Point2D points[] = new Point2D[pol.getQuantOfPoints()];
         pol.getApexs().toArray(points);
+
         Point2D data[] = {
             new Point(4, 3),
             new Point(3, 5),
@@ -50,7 +85,7 @@ public class ComputerTest {
         for (int i = 0; i < etData.length; i++) {
             assertEquals(etData[i], Computer.contains(points, data[i]));
         }
-        pol = Polyangle.read(new File("C:/Users/Матвей/Documents/test/Computer/test4.txt"), true);
+        pol = Polyangle.read(new File("C:/Users/Матвей/Documents/test/Computer/test4.txt"), false);
         points = new Point2D[pol.getQuantOfPoints()];
         pol.getApexs().toArray(points);
         data = new Point[]{
@@ -60,7 +95,7 @@ public class ComputerTest {
             new Point(5, 4),
             new Point(0, 3),
             new Point(10, 7)};
-        etData = new boolean[]{false, false, false, true, false, false};
+        etData = new boolean[]{false, true, true, true, false, false};
         for (int i = 0; i < etData.length; i++) {
             assertEquals(etData[i], Computer.contains(points, data[i]));
         }
@@ -80,18 +115,32 @@ public class ComputerTest {
         for (int i = 0; i < etData.length; i++) {
             assertEquals(etData[i], Computer.UCcontains(points[i], new Point(0, 0)));
         }
-        Polyangle p = Polyangle.read(new File("C:/Users/Матвей/Documents/test/Computer/test2.txt"), true);
+        Polyangle p = Polyangle.read(new File("C:/Users/Матвей/Documents/test/Computer/test2.txt"), false);
         Point2D ps[] = new Point2D[p.getQuantOfPoints()];
         p.getApexs().toArray(ps);
         Point2D data[] = {
             new Point(1, 1),
             new Point(5, 1),
-            new Point(3, 4),
+            new Point(3, 3),
             new Point(5, 3),
             new Point(2, 3)};
         etData = new boolean[]{false, false, true, true, false};
         for (int i = 0; i < etData.length; i++) {
             assertEquals(etData[i], Computer.UCcontains(ps, data[i]));
+        }
+        System.out.println("-------------------");
+    }
+
+    @Ignore
+    @Test
+    public void testCandUCcontains() {
+        Random r = new Random(254);
+        for (int i = 0; i < 2; i++) {
+            Point p = new Point(r.nextInt(500), r.nextInt(500));
+            Polyangle pol = Polyangle.randGen(4, r.nextInt(), 500, 500);
+            Point2D points[] = new Point2D[pol.getQuantOfPoints()];
+            pol.getApexs().toArray(points);
+            assertEquals(Computer.UCcontains(points, p), Computer.contains(points, p));
         }
         System.out.println("-------------------");
     }
@@ -127,6 +176,7 @@ public class ComputerTest {
         for (int i = 0; i < etData.length; i++) {
             assertEquals(etData[i], Computer.sectContains(sect, p[i]));
         }
+        System.out.println("-------------------");
     }
 
     @Test

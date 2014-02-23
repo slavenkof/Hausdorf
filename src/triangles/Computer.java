@@ -105,42 +105,46 @@ public class Computer {
         Point2D act[] = points.clone();
         PointsComparator pc = new PointsComparator();
         Arrays.sort(act, pc);
-        PolarAngleCompNechet pac = new PolarAngleCompNechet(act[0]);
+        PolarAngleCompDown pac = new PolarAngleCompDown(act[0]);
         Arrays.sort(act, pac);
         return act;
     }
 
     /**
-     * Алгоритм сортировки по полярному углу. Угол измеряется от нижней полуоси
-     * y, против часовой стрелки.
+     * Метод реализует сортировку точек по полярному углу. Сортировка
+     * производится следующим образом:
+     * <ul>
+     * <li>Наименьшей считается точка с меньшим углом относительно
+     * положительного направления оси Ox.</li>
+     * <li>Если углы равны, то наименьшей считается точка, наиболее приближенная
+     * к началу координат.</li>
+     * </ul>
      *
      * @param points массив точек, которые необходимо рассортировать.
      * @return отсортированный массив точек.
      */
     public static Point2D[] pointsSortAngle(Point2D points[]) {
         Point2D act[] = points.clone();
-        ArrayList<Point2D> operative = new ArrayList<>();
-        ArrayList<Point2D> op = new ArrayList<>();
-        for (int i = 0; i < act.length; i++) {
-            if (StrictMath.signum(act[i].getX()) == 1) {
-                operative.add(act[i]);
-            } else if (StrictMath.signum(act[i].getX()) == 0 && StrictMath.signum(act[i].getY()) == 1) {
-                operative.add(act[i]);
+        ArrayList<Point2D> opUp = new ArrayList<>();
+        ArrayList<Point2D> opDown = new ArrayList<>();
+        for (Point2D act1 : act) {
+            if (StrictMath.signum(act1.getY()) == 1) {
+                opUp.add(act1);
+            } else if (StrictMath.signum(act1.getY()) == 0 && StrictMath.signum(act1.getX()) >= 0) {
+                opUp.add(act1);
             } else {
-                op.add(act[i]);
+                opDown.add(act1);
             }
         }
-        Point2D one[] = new Point2D[operative.size()];
-        operative.toArray(one);
-        Point2D two[] = new Point2D[op.size()];
-        op.toArray(two);
-        PolarAngleCompNechet pacn = new PolarAngleCompNechet(new Point(0, 0));
-        Arrays.sort(one, pacn);
-        PolarAngleCompChet pacc = new PolarAngleCompChet(new Point(0, 0));
-        Arrays.sort(two, pacc);
-        Point2D answer[] = Computer.mixArrays(new Point2D[][]{one, two});
-//        System.arraycopy(one, 0, answer, 0, one.length);
-//        System.arraycopy(two, 0, answer, one.length, two.length);
+        Point2D up[] = new Point2D[opUp.size()];
+        opUp.toArray(up);
+        Point2D down[] = new Point2D[opDown.size()];
+        opDown.toArray(down);
+        PolarAngleCompDown downComp = new PolarAngleCompDown(new Point(0, 0));
+        Arrays.sort(down, downComp);
+        PolarAngleCompUp upComp = new PolarAngleCompUp(new Point(0, 0));
+        Arrays.sort(up, upComp);
+        Point2D answer[] = Computer.mixArrays(new Point2D[][]{up, down});
         return answer;
     }
 
@@ -480,7 +484,7 @@ public class Computer {
 
     /**
      * Метод для склейки двумерного массива в один многомерный. Реализовано
-     * через <code>System.arraycopy</code>.
+     * через <code>System.arraycopDowny</code>.
      *
      * @param arrays исходный массив.
      * @return
@@ -501,7 +505,7 @@ public class Computer {
 
     /**
      * Метод для склейки двумерного массива в один многомерный. Реализовано
-     * через <code>System.arraycopy</code>.
+     * через <code>System.arraycopDowny</code>.
      *
      * @param arrays исходный массив.
      * @return

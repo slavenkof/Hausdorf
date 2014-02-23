@@ -47,7 +47,7 @@ public class Polyangle implements Cloneable {
         }
         Point2D pp[];
         if (needSort) {
-            pp = Computer.pointsSort(p);
+            pp = Computer.pointsSortAngle(p);
         } else {
             pp = p;
         }
@@ -69,7 +69,7 @@ public class Polyangle implements Cloneable {
     public Polyangle(Point2D points[], boolean needSort) {
         if (needSort) {
             sorted = true;
-            apexs.addAll(Arrays.asList(Computer.pointsSort(points)));
+            apexs.addAll(Arrays.asList(Computer.pointsSortAngle(points)));
         } else {
             sorted = false;
             apexs.addAll(Arrays.asList(points));
