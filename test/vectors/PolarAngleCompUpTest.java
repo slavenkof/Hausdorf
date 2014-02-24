@@ -19,8 +19,6 @@ import org.junit.Test;
  */
 public class PolarAngleCompUpTest {
 
-//    Random r = new Random(25);
-
     public PolarAngleCompUpTest() {
     }
 
@@ -29,7 +27,7 @@ public class PolarAngleCompUpTest {
      */
     @Test
     public void testCompare() {
-        System.out.println("compare");
+        System.out.println("compareUp");
         Point[] points = new Point[]{
             new Point(0, 4),
             new Point(-1, 4),
@@ -57,7 +55,7 @@ public class PolarAngleCompUpTest {
             Arrays.sort(points, instance);
             Assert.assertArrayEquals(etData, points);
         }
-
+        System.out.println("-------------------");
     }
 
 }
