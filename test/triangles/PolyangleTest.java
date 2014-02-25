@@ -63,19 +63,34 @@ public class PolyangleTest {
         assertArrayEquals(etData, Polyangle.readAll(file[3], true));
         System.out.println("-------------------");
     }
-    
+
     @Test
-    public void testIsConvex(){
+    public void testIsConvex() {
         System.out.println("isConvex (8 tests");
         Polyangle pols[] = Polyangle.readAll(new File("C:/Users/Матвей/Documents/test/Polyangle/test5.txt"), false);
         boolean etData[] = {true, true, true, true, true, true};
-        for (int i=0; i<etData.length; i++){
+        for (int i = 0; i < etData.length; i++) {
             assertEquals(etData[i], pols[i].isConvex());
         }
         Polyangle pol = Polyangle.read(new File("C:/Users/Матвей/Documents/test/Computer/test2.txt"), true);
         assertEquals(false, pol.isConvex());
         pol = Polyangle.read(new File("C:/Users/Матвей/Documents/test/Polyangle/test8.txt"), false);
         assertEquals(false, pol.isConvex());
+        System.out.println("-------------------");
+    }
+
+    @Test
+    public void testIsConvex2() {
+        System.out.println("isConvex2 (50 tests)");
+        int n = 2;
+        Polyangle pol[] = new Polyangle[n];
+        for (int i = 0; i < n; i++) {
+            pol[i] = Polyangle.randGen(5, i, 100, 100);
+        }
+        for (int i = 0; i < n; i++) {
+            System.out.println(pol[i]);
+            assertTrue(Integer.toString(i), pol[i].isConvex());
+        }
         System.out.println("-------------------");
     }
 }

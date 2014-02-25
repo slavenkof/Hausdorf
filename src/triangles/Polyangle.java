@@ -19,6 +19,16 @@ import vectors.TheVector;
  */
 public class Polyangle implements Cloneable {
 
+    public static void main(String[] args) {
+        boolean ok = true;
+        for (int i = 0; i < 20; i++) {
+            Polyangle pol = Polyangle.randGen(10, i, 100, 100);
+            System.out.println(pol);
+            ok = ok && pol.isConvex();
+        }
+        System.out.println(ok);
+    }
+
     private final boolean sorted;
 
     /**
@@ -239,7 +249,12 @@ public class Polyangle implements Cloneable {
         for (int i = 0; i < quantityOfPoints; i++) {
             points[i] = new Point(x[i], y[i]);
         }
+//        System.out.println(Arrays.toString(points));
+//        System.out.println("");
         points = Computer.pointsSort(points);
+//        System.out.println(Arrays.toString(points));
+//        System.out.println("");
+//        System.out.println("-----------------------------");
         TheStack<Point2D> stack = new TheStack<>();
         stack.push(points[0]);
         stack.push(points[1]);
@@ -253,9 +268,13 @@ public class Polyangle implements Cloneable {
                     result[i] = stack.pop();
                 }
                 if (result.length < 3) {
-                    return randGen(qOfP, seed, width, height);
+                    return randGen(qOfP, seed + 1, width, height);
                 }
-                return new Polyangle(result, true);
+                Polyangle poly = new Polyangle(result, false);
+                if (poly.isConvex()) {
+                    return poly;
+                }
+                return randGen(qOfP, seed + 1, width, height);
             }
             Point2D a0 = stack.peek();
             Point2D a = stack.deepPeek();
