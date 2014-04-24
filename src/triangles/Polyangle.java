@@ -19,16 +19,6 @@ import vectors.TheVector;
  */
 public class Polyangle implements Cloneable {
 
-    public static void main(String[] args) {
-        boolean ok = true;
-        for (int i = 0; i < 20; i++) {
-            Polyangle pol = Polyangle.randGen(10, i, 100, 100);
-            System.out.println(pol);
-            ok = ok && pol.isConvex();
-        }
-        System.out.println(ok);
-    }
-
     private final boolean sorted;
 
     /**

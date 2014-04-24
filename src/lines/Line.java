@@ -329,15 +329,6 @@ public class Line {
         }
         return true;
     }
-
-    public static void main(String[] args) {
-        Point[] a = new Point[]{
-            new Point(), new Point()
-        };
-
-        System.out.println(Line.getMPerpen(a));
-    }
-
     @Override
     public String toString() {
         return A + " * X + " + B + " * Y + " + C + " = 0";

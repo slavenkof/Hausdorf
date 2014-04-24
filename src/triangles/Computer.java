@@ -33,13 +33,13 @@ public class Computer {
      */
     public static void main(String[] args) throws FileNotFoundException {
         System.out.println("ROUND" + ROUND_KOEF);
-//        String a = "C:/try/p5.txt";
-//        String b = "C:/try/p6.txt";
-        String a = "D:\\Кольцо\\Проект\\R\\Tests\\new\\TestCase2\\Pols\\5_PolA.txt";
-        String b = "D:\\Кольцо\\Проект\\R\\Tests\\new\\TestCase2\\Pols\\5_PolB.txt";
+        String a = "C:/try/p2.txt";
+        String b = "C:/try/p2.txt";
+//        String a = "D:\\Кольцо\\Проект\\R\\Tests\\new\\TestCase2\\Pols\\5_PolA.txt";
+//        String b = "D:\\Кольцо\\Проект\\R\\Tests\\new\\TestCase2\\Pols\\5_PolB.txt";
         Polyangle A = Polyangle.read(new File(a), false);
         Polyangle B = Polyangle.read(new File(b), false);
-//        B.translate(new TheVector(100, 150));
+        B.translate(new TheVector(100, 150));
         Polyangle AA = A.clone();
         Polyangle BB = B.clone();
         System.out.println("    FILES");
@@ -66,7 +66,7 @@ public class Computer {
         System.out.println("------------------------------");
         Haus = TheVector.getHDistance(A, B);
         TPainter.once(A.getPolygon(), B.getPolygon());
-        TPAinterr.once(A.getPolygon(), B.getPolygon());
+//        TPAinterr.once(A.getPolygon(), B.getPolygon());
         for (int i = 0; i < Haus.length; i++) {
             System.out.println("Length: " + Haus[i].getVLength());
             System.out.println("Points: " + Arrays.toString(Haus[i].getPoints()));
@@ -85,7 +85,7 @@ public class Computer {
         System.out.println("------------------------------");
         Haus = TheVector.getUSHDistance(A, B);
         TPainter.once(A.getPolygon(), B.getPolygon());
-        TPAinterr.once(A.getPolygon(), B.getPolygon());
+//        TPAinterr.once(A.getPolygon(), B.getPolygon());
         for (int i = 0; i < Haus.length; i++) {
             System.out.println(Haus[i].getVLength());
             System.out.println(Arrays.toString(Haus[i].getPoints()));
@@ -174,7 +174,7 @@ public class Computer {
         }
         one = new TheVector(new Point2D[]{points[points.length - 1], points[0]});
         two = new TheVector(new Point2D[]{points[points.length - 1], p});
-        if (!(TheVector.pseudoScalarDerivate(new TheVector[]{one, two}) >= 0) == et) {
+        if (!(TheVector.pseudoScalarDerivate(new TheVector[]{one, two}) >= 0) == et) {//xxx
             return false;
         }
         return true;
@@ -289,7 +289,7 @@ public class Computer {
     private static void optimizeC(Polyangle stab, Polyangle move) {
 //        System.err.println("optimizeC");
         TheVector haus[] = TheVector.getCHDistance(stab, move);
-        final double cons = haus[0].getVLength();
+        final double cons = haus[0].getVLength();//TODO: деление
         int l = 1;
         if (TheVector.insideOf(haus) || (haus[0].getVLength() < ROUND_KOEF)) {
             return;
@@ -311,7 +311,7 @@ public class Computer {
     }
 
     /**
-     * Реализация эвристическго алгоритма оптимального расположения двух
+     * Реализация эвристического алгоритма оптимального расположения двух
      * <b>произвольных</b> многоугольников. Оптимальность оценивается с точки
      * зрения расстояния Хаусдорфа. Используется алгоритм Шора, коэффициент
      * равен <code>cons/i</code>, где cons - расстояние до оптимизации, i -

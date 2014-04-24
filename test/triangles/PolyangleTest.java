@@ -88,7 +88,6 @@ public class PolyangleTest {
             pol[i] = Polyangle.randGen(5, i, 100, 100);
         }
         for (int i = 0; i < n; i++) {
-            System.out.println(pol[i]);
             assertTrue(Integer.toString(i), pol[i].isConvex());
         }
         System.out.println("-------------------");
