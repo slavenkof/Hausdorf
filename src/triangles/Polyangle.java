@@ -455,7 +455,7 @@ public class Polyangle implements Cloneable {
     public Polyangle clone() {
         Point2D pp[] = new Point2D[apexs.size()];
         this.apexs.toArray(pp);
-        return new Polyangle(pp, sorted);
+        return new Polyangle(pp, false);
     }
 
     /**

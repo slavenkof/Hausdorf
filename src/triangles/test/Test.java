@@ -4,7 +4,8 @@ import java.io.FileNotFoundException;
 import java.util.Random;
 import triangles.Computer;
 import triangles.Polyangle;
-import triangles.gen.*;
+import triangles.gen.PolGenerator;
+import triangles.gen.UCGenerator;
 import vectors.TheVector;
 
 /**
@@ -33,7 +34,7 @@ public class Test {
                 new String[]{"D:/Кольцо/Проект/R/", "D:/Кольцо/Проект/R/Pols/", "D:/Кольцо/Проект/R/EvM/"},
                 new int[]{6, 500, 500});
         test.initLogs();
-        for (int i = 0; i < 250; i++) {
+        for (int i = 0; i < 1; i++) {
             test.TestN++;
             test.test();
             test.close();

@@ -289,7 +289,7 @@ public class Computer {
     private static void optimizeC(Polyangle stab, Polyangle move) {
 //        System.err.println("optimizeC");
         TheVector haus[] = TheVector.getCHDistance(stab, move);
-        final double cons = haus[0].getVLength();//TODO: деление
+        final double cons = haus[0].getVLength() / 3;//TODO: деление
         int l = 1;
         if (TheVector.insideOf(haus) || (haus[0].getVLength() < ROUND_KOEF)) {
             return;
@@ -323,7 +323,7 @@ public class Computer {
     private static void optimizeUC(Polyangle stab, Polyangle move) {
 //        System.err.println("optimizeUC");
         TheVector haus[] = TheVector.getUCHDistance(stab, move);
-        double cons = haus[0].getVLength();
+        double cons = haus[0].getVLength() / 3;
         long l = 1;
         if (TheVector.insideOf(haus) || (haus[0].getVLength() < ROUND_KOEF)) {
             return;
@@ -370,6 +370,46 @@ public class Computer {
      * @param log
      * @throws java.io.FileNotFoundException
      */
+//    private static void exSearchOptimizeC(Polyangle stab, Polyangle move, Log log) throws FileNotFoundException {
+//        System.err.println("exSearchOptimizeC");
+//        Polyangle optimum;
+//        Point2D pro[] = Computer.calcRange(stab, move);
+//        TheVector norma = new TheVector(new Point2D[]{new Point2D.Double(move.getBounds().x, move.getBounds().y), pro[0]});
+//        move.translate(norma);
+//        TheVector i = new TheVector(1, 0);
+//        TheVector j = new TheVector(0, -1);
+//        norma = new TheVector(-(pro[1].getX() - pro[0].getX() + 1), 0);
+//        optimum = move.clone();
+//        double hOptimum = TheVector.getCHDistance(stab, move)[0].getVLength();
+//        log.post(pro[0] + " " + pro[1]);
+//        log.postnb("[");
+//        for (int l = (int) pro[0].getY(); l >= (int) pro[1].getY(); l--) {
+//            log.post("");
+//            log.postnb("[");
+//            System.out.println("l = " + (-l + pro[0].getY()));
+//            System.out.println(-((int) pro[1].getY()) + l + " left");
+//            for (int m = (int) pro[0].getX(); m <= (int) pro[1].getX(); m++) {
+//                TheVector haus[] = TheVector.getCHDistance(stab, move);
+//                if (haus[0].getVLength() < hOptimum) {
+//                    optimum = move.clone();
+//                    hOptimum = haus[0].getVLength();
+//                }
+//                move.translate(i);
+//                if (m != (int) pro[0].getX()) {
+//                    log.postnb(", ");
+//                }
+//                log.postnb(Double.toString(haus[0].getVLength()));
+//                if (m == (int) pro[1].getX()) {
+//                    log.postnb("],");
+//                }
+//            }
+//            move.translate(j);
+//            move.translate(norma);
+//        }
+//        log.postnb("]");
+//        log.die();
+//        move.translate(new TheVector(new Point2D[]{move.getApexs().get(0), optimum.getApexs().get(0)}));
+//    }
     private static void exSearchOptimizeC(Polyangle stab, Polyangle move, Log log) throws FileNotFoundException {
         System.err.println("exSearchOptimizeC");
         Polyangle optimum;
@@ -380,7 +420,8 @@ public class Computer {
         TheVector j = new TheVector(0, -1);
         norma = new TheVector(-(pro[1].getX() - pro[0].getX() + 1), 0);
         optimum = move.clone();
-        double hOptimum = TheVector.getCHDistance(stab, move)[0].getVLength();
+        TheVector optim = TheVector.getCHDistance(stab, move)[0];
+//        double hOptimum = TheVector.getCHDistance(stab, move)[0].getVLength();
         log.post(pro[0] + " " + pro[1]);
         log.postnb("[");
         for (int l = (int) pro[0].getY(); l >= (int) pro[1].getY(); l--) {
@@ -390,9 +431,9 @@ public class Computer {
             System.out.println(-((int) pro[1].getY()) + l + " left");
             for (int m = (int) pro[0].getX(); m <= (int) pro[1].getX(); m++) {
                 TheVector haus[] = TheVector.getCHDistance(stab, move);
-                if (haus[0].getVLength() < hOptimum) {
+                if (haus[0].compareTo(optim) < 0) {
                     optimum = move.clone();
-                    hOptimum = haus[0].getVLength();
+                    optim = haus[0];
                 }
                 move.translate(i);
                 if (m != (int) pro[0].getX()) {
@@ -427,11 +468,11 @@ public class Computer {
         Point2D pro[] = Computer.calcRange(stab, move);
         TheVector norma = new TheVector(new Point2D[]{new Point2D.Double(move.getBounds().x, move.getBounds().y), pro[0]});
         move.translate(norma);
-        TheVector i = new TheVector(1, 0);
+         TheVector i = new TheVector(1, 0);
         TheVector j = new TheVector(0, -1);
         norma = new TheVector(-(pro[1].getX() - pro[0].getX() + 1), 0);
         optimum = move.clone();
-        double hOptimum = TheVector.getUCHDistance(stab, move)[0].getVLength();
+        TheVector optim = TheVector.getUCHDistance(stab, move)[0];
         log.post(pro[0] + " " + pro[1]);
         log.postnb("[");
         for (int l = (int) pro[0].getY(); l >= (int) pro[1].getY(); l--) {
@@ -441,9 +482,9 @@ public class Computer {
             System.out.println(-((int) pro[1].getY()) + l + " left");
             for (int m = (int) pro[0].getX(); m <= (int) pro[1].getX(); m++) {
                 TheVector haus[] = TheVector.getUCHDistance(stab, move);
-                if (haus[0].getVLength() < hOptimum) {
+                if (haus[0].compareTo(optim) < 0) {
                     optimum = move.clone();
-                    hOptimum = haus[0].getVLength();
+                    optim = haus[0];
                 }
                 move.translate(i);
                 if (m != (int) pro[0].getX()) {
@@ -454,13 +495,53 @@ public class Computer {
                     log.postnb("],");
                 }
             }
-            move.translate(j);
+                        move.translate(j);
             move.translate(norma);
         }
         log.postnb("]");
         log.die();
         move.translate(new TheVector(new Point2D[]{move.getApexs().get(0), optimum.getApexs().get(0)}));
-    }
+      }
+//    private static void exSearchOptimizeUC(Polyangle stab, Polyangle move, Log log) throws FileNotFoundException {
+//        System.err.println("exSearchOptimizeUC");
+//        Polyangle optimum;
+//        Point2D pro[] = Computer.calcRange(stab, move);
+//        TheVector norma = new TheVector(new Point2D[]{new Point2D.Double(move.getBounds().x, move.getBounds().y), pro[0]});
+//        move.translate(norma);
+//        TheVector i = new TheVector(1, 0);
+//        TheVector j = new TheVector(0, -1);
+//        norma = new TheVector(-(pro[1].getX() - pro[0].getX() + 1), 0);
+//        optimum = move.clone();
+//        double hOptimum = TheVector.getUCHDistance(stab, move)[0].getVLength();
+//        log.post(pro[0] + " " + pro[1]);
+//        log.postnb("[");
+//        for (int l = (int) pro[0].getY(); l >= (int) pro[1].getY(); l--) {
+//            log.post("");
+//            log.postnb("[");
+//            System.out.println("l = " + (-l + pro[0].getY()));
+//            System.out.println(-((int) pro[1].getY()) + l + " left");
+//            for (int m = (int) pro[0].getX(); m <= (int) pro[1].getX(); m++) {
+//                TheVector haus[] = TheVector.getUCHDistance(stab, move);
+//                if (haus[0].getVLength() < hOptimum) {
+//                    optimum = move.clone();
+//                    hOptimum = haus[0].getVLength();
+//                }
+//                move.translate(i);
+//                if (m != (int) pro[0].getX()) {
+//                    log.postnb(", ");
+//                }
+//                log.postnb(Double.toString(haus[0].getVLength()));
+//                if (m == (int) pro[1].getX()) {
+//                    log.postnb("],");
+//                }
+//            }
+//            move.translate(j);
+//            move.translate(norma);
+//        }
+//        log.postnb("]");
+//        log.die();
+//        move.translate(new TheVector(new Point2D[]{move.getApexs().get(0), optimum.getApexs().get(0)}));
+//    }
 
     /**
      * Проверка принадлежности точки отрезку. Отрезок задается граничными

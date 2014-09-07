@@ -17,11 +17,11 @@ import triangles.Polyangle;
  * @author Славенко Матвей slavenkofm@yandex.ru
  *
  */
-public class TheVector implements Cloneable {
+public class TheVector implements Cloneable, Comparable<TheVector> {
 
     public static void main(String[] args) {
         TheVector vecs[] = new TheVector[]{
-            new TheVector(0,-15),
+            new TheVector(0, -15),
             new TheVector(0, -5),
             new TheVector(10, -15),};
         System.out.println(TheVector.insideOf(vecs));
@@ -30,6 +30,10 @@ public class TheVector implements Cloneable {
     private double vCoords[] = new double[2];
     private Point2D[] points = new Point2D.Double[2];
     private boolean concretic;
+    private double VLength;
+    private double SqVLength;
+    private boolean LCounted;
+    private boolean SqLCounted;
 
     /**
      * Создает новый вектор, начальная точка которого points[0], а конечная -
@@ -279,7 +283,7 @@ public class TheVector implements Cloneable {
      * @return величина, численно равная скалярному квадрату этого вектора.
      */
     public double scalarSq() {
-        return Math.pow(getVLength(), 2);
+        return getSqVLength();
     }
 
     /**
@@ -324,9 +328,36 @@ public class TheVector implements Cloneable {
      * @return величина, численно равная длине вектора.
      */
     public double getVLength() {
-        double answer = Math.pow(vCoords[0], 2) + Math.pow(vCoords[1], 2);
+        if (LCounted) {
+            return VLength;
+        }
+        if (SqLCounted) {
+            double answer = Math.sqrt(SqVLength);
+            VLength = answer;
+            LCounted = true;
+            return answer;
+        }
+        double answer = getSqVLength();
         answer = Math.sqrt(answer);
+        VLength = answer;
+        LCounted = true;
         return answer;
+    }
+
+    /**
+     * Позволяет получить квадрат длины вектора. Вычисление по теореме Пифагора.
+     *
+     * @return величина, численно равная квадрату длины вектора.
+     */
+    public double getSqVLength() {
+        if (SqLCounted) {
+            return SqVLength;
+        } else {
+            double answer = Math.pow(vCoords[0], 2) + Math.pow(vCoords[1], 2);
+            SqLCounted = true;
+            SqVLength = answer;
+            return answer;
+        }
     }
 
     /**
@@ -957,5 +988,28 @@ public class TheVector implements Cloneable {
         hash = 79 * hash + Arrays.hashCode(this.vCoords);
         hash = 79 * hash;
         return hash;
+    }
+
+    /**
+     * Сравнивает два вектора по длине.
+     *
+     * @param vec вектор, с которым сравниваем.
+     * @return +1 - этот больше. 0 - равны. -1 - тот больше.
+     */
+    @Override
+    public int compareTo(TheVector vec) {
+        double lt = this.getSqVLength();
+        double lvec = vec.getSqVLength();
+        int answer = 0;
+        if (lt > lvec) {
+            answer = 1;
+        }
+        if (lt == lvec) {
+            answer = 0;
+        }
+        if (lt < lvec) {
+            answer = -1;
+        }
+        return answer;
     }
 }
