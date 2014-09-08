@@ -19,16 +19,6 @@ import vectors.TheVector;
  */
 public class Polyangle implements Cloneable {
 
-    public static void main(String[] args) {
-        boolean ok = true;
-        for (int i = 0; i < 20; i++) {
-            Polyangle pol = Polyangle.randGen(10, i, 100, 100);
-            System.out.println(pol);
-            ok = ok && pol.isConvex();
-        }
-        System.out.println(ok);
-    }
-
     private final boolean sorted;
 
     /**
@@ -465,7 +455,7 @@ public class Polyangle implements Cloneable {
     public Polyangle clone() {
         Point2D pp[] = new Point2D[apexs.size()];
         this.apexs.toArray(pp);
-        return new Polyangle(pp, sorted);
+        return new Polyangle(pp, false);
     }
 
     /**

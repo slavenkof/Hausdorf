@@ -4,7 +4,8 @@ import java.io.FileNotFoundException;
 import java.util.Random;
 import triangles.Computer;
 import triangles.Polyangle;
-import triangles.gen.*;
+import triangles.gen.PolGenerator;
+import triangles.gen.UCGenerator;
 import vectors.TheVector;
 
 /**
@@ -21,7 +22,7 @@ public class Test {
     private Polyangle A;
     private Polyangle B;
     private final Random ran;
-    public int TestN = 0;
+    private int TestN = 0;
 
     /**
      *
@@ -29,11 +30,11 @@ public class Test {
      * @throws FileNotFoundException
      */
     public static void main(String[] args) throws FileNotFoundException {
-        Test test = new Test(123456789, new UCGenerator(), new UCGenerator(),
-                new String[]{"D:/Кольцо/Проект/R/rubbish/", "D:/Кольцо/Проект/R/rubbish/", "D:/Кольцо/Проект/R/rubbish/"},
-                new int[]{4, 500, 500});
+        Test test = new Test(892213690, new UCGenerator(), new UCGenerator(),
+                new String[]{"D:/Кольцо/Проект/R/", "D:/Кольцо/Проект/R/Pols/", "D:/Кольцо/Проект/R/EvM/"},
+                new int[]{6, 500, 500});
         test.initLogs();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 1; i++) {
             test.TestN++;
             test.test();
             test.close();

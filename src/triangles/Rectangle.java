@@ -1,8 +1,9 @@
 package triangles;
 
 /**
- * Класс, представляющий многоугольник. Используется для задания области, в 
+ * Класс, представляющий многоугольник. Используется для задания области, в
  * которой нужно производить перебор по сетке.
+ *
  * @author Матвей
  */
 public class Rectangle {
@@ -26,18 +27,25 @@ public class Rectangle {
      * Высота
      */
     public double height;
-    
+
     /**
      * Создание прямоугольника с заданными параметрами.
+     *
      * @param x X-координата верхнего левого угла.
      * @param y Y-координата верхнего левого угла.
      * @param width Ширина многоугольника.
      * @param height Высота
      */
-    public Rectangle(double x, double y, double width, double height){
+    public Rectangle(double x, double y, double width, double height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+
+    @Override
+    public String toString() {
+        String a = Double.toString(x) + " ;" + Double.toString(y) + " ;" + Double.toString(width) + " ;" + Double.toString(height);
+        return a;
     }
 }
