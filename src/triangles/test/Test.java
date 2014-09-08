@@ -22,7 +22,7 @@ public class Test {
     private Polyangle A;
     private Polyangle B;
     private final Random ran;
-    private int TestN = 0;
+    public int TestN = 0;
 
     /**
      *
