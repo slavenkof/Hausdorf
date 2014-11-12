@@ -1,14 +1,15 @@
 package triangles.test;
 
 import java.awt.Color;
-import java.io.*;
-import triangles.*;
-import vectors.TheVector;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import javax.imageio.ImageIO;
-import triangles.draw.*;
-import static triangles.Computer.ROUND_KOEF;
+import triangles.Computer;
+import triangles.Polyangle;
+import vectors.TheVector;
 
 /**
  * Создание "картинки с точечками" для заданной пары многоугольников.
@@ -17,6 +18,8 @@ import static triangles.Computer.ROUND_KOEF;
  */
 public class HTest {
 
+    static String way = "D:/Кольцо/Проект/R/CurrentHTest3/";
+
     /**
      *
      * @param args
@@ -24,8 +27,22 @@ public class HTest {
      * @throws IOException
      */
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        String a = "C:/try/6_PolA2.txt";
-        String b = "C:/try/6_PolB2.txt";
+        String a = "C:/try/10_PolA2.txt";
+        String b = "C:/try/10_PolB2.txt";
+//        String a = "C:/try/1_PolA1.txt";
+//        String b = "C:/try/1_PolB1.txt";
+//        String a = "C:/try/23_PolA1.txt";
+//        String b = "C:/try/23_PolB1.txt";
+//        String a = "C:/try/30_PolA2.txt";
+//        String b = "C:/try/30_PolB2.txt";
+//        String a = "C:/try/22_PolA2.txt";
+//        String b = "C:/try/22_PolB2.txt";
+//        String a = "C:/try/24_PolA2.txt";
+//        String b = "C:/try/24_PolB2.txt";
+//        String a = "C:/try/7_PolA1.txt";
+//        String b = "C:/try/7_PolB1.txt";
+//        String a = "C:/try/6_PolA2.txt";
+//        String b = "C:/try/6_PolB2.txt";
 //        String a = "C:/try/2_PolA2.txt";
 //        String b = "C:/try/2_PolB2.txt";
 //        String a = "C:/try/p2.txt";
@@ -50,12 +67,12 @@ public class HTest {
         }
         ImageIO.write(image, "bmp", new File("D:/Кольцо/Проект/R/CurrentHTest/diagram.bmp"));
     }
-    
+
     static int[][] testPols(Polyangle stab, Polyangle move) throws FileNotFoundException {
         int k = 10;
-        Log TM = new Log("D:/Кольцо/Проект/R/CurrentHTest/TrueMatrix.txt");
-        Log HDVecs = new Log("D:/Кольцо/Проект/R/CurrentHTest/HDVecs.txt");
-        Log HDVLen = new Log("D:/Кольцо/Проект/R/CurrentHTest/HDVLength.txt");
+        Log TM = new Log(way + "TrueMatrix.txt");
+        Log HDVecs = new Log(way + "HDVecs.txt");
+        Log HDVLen = new Log(way + "HDVLength.txt");
         Polyangle A = stab.clone();
         Polyangle B = move.clone();
 //        Point2D pro[] = Computer.calcRange(A, B);
@@ -72,7 +89,7 @@ public class HTest {
         TheVector i = new TheVector(k, 0);
         TheVector j = new TheVector(0, -k);
         norma = new TheVector(-(pro[1].getX() - pro[0].getX() + (pro[1].getX() - pro[0].getX()) % k), 0);
-        Computer.exSearchOptimize(A, B, new Log("D:/Кольцо/Проект/R/CurrentHTest/HTestEvM.txt"));
+        Computer.exSearchOptimize(A, B, new Log(way + "HTestEvM.txt"));
         double hOptimum = TheVector.getHDistance(A, B)[0].getVLength();
         A = stab.clone();
         B = move.clone();
@@ -81,6 +98,8 @@ public class HTest {
         TM.post("ROUND_KOEF = " + Computer.ROUND_KOEF);
         TM.post("Second Koef = ROUND_KOEF * 10 = " + Computer.ROUND_KOEF * 10);
         TM.post("Step Koef = k = " + k);
+        TM.post(stab.toString());
+        TM.post(move.toString());
         TM.postnb("[");
         HDVecs.post(pro[0] + " " + pro[1]);
         HDVecs.postnb("[");
@@ -98,7 +117,7 @@ public class HTest {
 //            System.out.println(move.getBounds());
             for (int m = (int) pro[0].getX() / k; m < (int) pro[1].getX() / k; m++) {
                 Computer.optimize(A, B);
-                
+
                 TheVector haus[] = TheVector.getHDistance(A, B);
                 if (m != (int) pro[0].getX() / k) {
                     TM.postnb(", ");
@@ -137,5 +156,5 @@ public class HTest {
         HDVLen.die();
         return answer;
     }
-    
+
 }
