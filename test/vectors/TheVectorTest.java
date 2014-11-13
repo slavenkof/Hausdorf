@@ -351,7 +351,7 @@ public class TheVectorTest {
     }
 
     @Test
-    public void testGetDistanceVector() {
+    public void testGetCDistanceVector() {
         System.out.println("getDistance(sect+point)(7tests)");
         Point2D sect[][] = new Point2D[7][2];
         sect[0][0] = new Point(0, 0);
@@ -422,7 +422,7 @@ public class TheVectorTest {
             new TheVector(new double[]{-7, 0}),
             new TheVector(new double[]{0, 0})};
         for (int i = 0; i < 6; i++) {
-            assertArrayEquals(etData[i], TheVector.getDistanceVector(plans[i], p[i]));
+            assertArrayEquals(etData[i], TheVector.getCDistanceVector(plans[i], p[i]));
         }
         System.out.println("-------------------");
     }

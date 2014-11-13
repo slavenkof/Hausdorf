@@ -500,14 +500,15 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
     /**
      * Позволяет получить массив векторов, на которых достигается расстояние от
      * опорной точки до сторон многоугольника. Циклический вызов
-     * <code>getDistanceVector</code>, проверка на внутренность.
+     * <code>getCDistanceVector</code>, проверка на внутренность. Используется
+     * исключительно для ВЫПУКЛЫХ многоугольников.
      *
      * @param plan мнгоугольник, до которго нужно найти расстояния.
      * @param p опорная точка.
      * @return массив векторов, на которых достигаются расстояния до сторон
      * многоугольника.
      */
-    public static TheVector[] getDistanceVector(Polyangle plan, Point2D p) {
+    public static TheVector[] getCDistanceVector(Polyangle plan, Point2D p) {
         Object pointss[] = plan.getApexs().toArray();
         Point2D points[] = new Point2D[pointss.length];
         for (int i = 0; i < pointss.length; i++) {
@@ -530,7 +531,7 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
     /**
      * Позволяет получить массив векторов, на которых достигается расстояние от
      * опорной точки до сторон многоугольника. Циклический вызов
-     * <code>getDistanceVector</code>, проверка на внутренность.
+     * <code>getCDistanceVector</code>, проверка на внутренность.
      *
      * @param plan мнгоугольник, до которго нужно найти расстояния.
      * @param p опорная точка.
@@ -579,7 +580,7 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
         }
         TheVector answer[][] = new TheVector[move.getQuantOfPoints()][stab.getQuantOfPoints()];
         for (int i = 0; i < move.getQuantOfPoints(); i++) {
-            answer[i] = TheVector.getDistanceVector(stab, movePoints[i]);
+            answer[i] = TheVector.getCDistanceVector(stab, movePoints[i]);
         }
         return answer;
     }
@@ -737,7 +738,7 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
         Point2D points[] = TheVector.getBisPoints(stab, move);
         TheVector rawDistances[][] = new TheVector[points.length][stab.getQuantOfPoints()];
         for (int i = 0; i < points.length; i++) {
-            rawDistances[i] = TheVector.getDistanceVector(stab, points[i]);
+            rawDistances[i] = TheVector.getUCDistanceVector(stab, points[i]);
         }
         TheVector washedDistances[][] = new TheVector[points.length][];
         for (int i = 0; i < points.length; i++) {
@@ -749,7 +750,7 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
 
     /**
      * Получение точек, находящихся на пересечении медиатрис, возникающих из
-     * <code>move</code>.
+     * <code>move</code> со сторонами <code>stab</code>.
      *
      * @param stab до которого ищем расстояния.
      * @param move от которого ищем расстояния.
@@ -795,7 +796,7 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
         Point2D points[] = TheVector.getMPerpenPoints(stab, move);
         TheVector rawDistances[][] = new TheVector[points.length][stab.getQuantOfPoints()];
         for (int i = 0; i < points.length; i++) {
-            rawDistances[i] = TheVector.getDistanceVector(stab, points[i]);
+            rawDistances[i] = TheVector.getUCDistanceVector(stab, points[i]);
         }
         TheVector washedDistances[][] = new TheVector[points.length][];
         for (int i = 0; i < points.length; i++) {
@@ -847,7 +848,7 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
         Point2D points[] = TheVector.getParaPoints(stab, move);
         TheVector rawDistances[][] = new TheVector[points.length][stab.getQuantOfPoints()];
         for (int i = 0; i < points.length; i++) {
-            rawDistances[i] = TheVector.getDistanceVector(stab, points[i]);
+            rawDistances[i] = TheVector.getUCDistanceVector(stab, points[i]);
         }
         TheVector washedDistances[][] = new TheVector[points.length][];
         for (int i = 0; i < points.length; i++) {
@@ -888,7 +889,7 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
     }
 
     /**
-     * Получение Хаусдорфова отклонения многоугольника stab от move.
+     * Получение Хаусдорфова отклонения многоугольника stab от move. zx
      *
      * @param stab до которого ищем расстояния.
      * @param move от которого ищем расстояния.

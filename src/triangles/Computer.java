@@ -659,7 +659,7 @@ public class Computer {
     }
 
     protected static class PolarAngleCompNechet implements Comparator<Point2D> {
-//TODO: ÐÐµÑÐµÐ¿Ð¸ÑÐ°ÑÑ!!!
+//TODO: переписать!!!
 
         Point2D fulcrum;
 
