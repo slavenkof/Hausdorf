@@ -3,8 +3,12 @@ package triangles;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.io.File;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import java.io.*;
 
 public class PolyangleTest {
 
@@ -12,8 +16,8 @@ public class PolyangleTest {
     }
 
     @Test
-    public void testRead() {
-        System.out.println("read(4 tests)");
+    public void testReadWithSort() {
+        System.out.println("readWithSort(4 tests)");
         File file[] = {
             new File("C:/Users/Матвей/Documents/test/Polyangle/test1.txt"),
             new File("C:/Users/Матвей/Documents/test/Polyangle/test2.txt"),
@@ -31,8 +35,8 @@ public class PolyangleTest {
     }
 
     @Test
-    public void testReadAndReadAll() {
-        System.out.println("readAndReadAll(4 tests)");
+    public void testReadAndReadAllWithSort() {
+        System.out.println("readAndReadAllWithSort(4 tests)");
         File file[] = {
             new File("C:/Users/Матвей/Documents/test/Polyangle/test1.txt"),
             new File("C:/Users/Матвей/Documents/test/Polyangle/test2.txt"),
@@ -92,5 +96,124 @@ public class PolyangleTest {
             assertTrue(Integer.toString(i), pol[i].isConvex());
         }
         System.out.println("-------------------");
+    }
+
+    @Test
+    public void testReadWithoutSort() throws FileNotFoundException {
+        System.out.println("readWithoutSort (5 tests)");
+        Polyangle pols[] = new Polyangle[]{
+            new Polyangle(new int[]{
+                28,
+                49,
+                60,
+                180,
+                108,
+                246,
+                386,
+                378,
+                358,
+                453
+            }, new int[]{
+                448,
+                251,
+                153,
+                72,
+                307,
+                70,
+                89,
+                149,
+                339,
+                431
+            }, false),
+            new Polyangle(new int[]{
+                100,
+                150,
+                50,
+                150,
+                250,
+                350,
+                350,
+                350,
+                250,
+                200
+            }, new int[]{
+                50,
+                150,
+                200,
+                250,
+                200,
+                300,
+                300,
+                100,
+                150,
+                50
+            }, false),
+            new Polyangle(new int[]{
+                250,
+                200,
+                100,
+                200,
+                250,
+                300,
+                400,
+                300
+            }, new int[]{
+                200,
+                300,
+                350,
+                400,
+                500,
+                400,
+                350,
+                300
+            }, false),
+            new Polyangle(new int[]{
+                100,
+                100,
+                300,
+                300,
+                200,
+                250
+            }, new int[]{
+                150,
+                250,
+                250,
+                150,
+                100,
+                150
+            }, false),
+            new Polyangle(new int[]{
+                66,
+                85,
+                449,
+                257,
+                339,
+                336,
+                218
+            }, new int[]{
+                297,
+                249,
+                95,
+                355,
+                428,
+                440,
+                436
+            }, false)
+        };
+        File file = new File("C:/Users/Матвей/Documents/test/Polyangle/readTest.txt");
+        for (Polyangle pol : pols) {
+            try (PrintStream fos = new PrintStream(new FileOutputStream(file))) {
+                fos.println(pol);
+            }
+            Polyangle p = Polyangle.read(file, false);
+            try {
+                assertEquals(pol, p);
+            } catch (AssertionError e){
+                file.delete();
+                throw e;
+            } finally{
+                file.delete();
+            }
+        }
     }
 }

@@ -2,8 +2,10 @@ package triangles;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import vectors.TheVector;
 import triangles.test.Log;
@@ -116,20 +118,27 @@ public class Console {
 //        System.out.println(move.getBounds());
 //        System.out.println(TheVector.getUCHDistance(stab, move)[0]);
 //    }
+//    
     public static void main(String[] args) {
-        Polyangle C = stab.clone();
-        System.out.println(stab);
-        System.out.println(C);
-        
-        stab.translate(new TheVector (new int[]{1, 1}));
-        System.out.println(stab);
-        ArrayList<Point2D> p1 = C.getApexs();
-        ArrayList<Point2D> p2 = stab.getApexs();
-        Iterator<Point2D> i1 = p1.iterator();
-        Iterator<Point2D> i2 = p2.iterator();
-        while(i1.hasNext()){
-            System.out.println(new TheVector(new Point2D[]{i1.next(), i2.next()}));
-        }
-        
+        File file = new File("C:/try/Kaverza.txt");
+        Polyangle[] pols = Polyangle.readAll(file, false);
+        TheVector dist[] = TheVector.getUCHDistance(pols[0], pols[1]);
+        System.out.println(Arrays.toString(dist));
+        System.out.println(Arrays.toString(dist[0].getPoints()));
+        System.out.println(TheVector.insideOf(TheVector.getUCHDistance(pols[0], pols[1])));
+        System.out.println(TheVector.insideOf(TheVector.getUCHDistance(pols[1], pols[0])));
+        System.out.println("***");
+        System.out.println(pols[0]);
+        System.out.println(pols[1]);
+        System.out.println("***");
+        Computer.optimize(pols[1], pols[0]);
+        System.out.println(pols[0]);
+        System.out.println(pols[1]);
+        dist = TheVector.getUCHDistance(pols[0], pols[1]);
+        System.out.println(Arrays.toString(dist));
+        System.out.println(Arrays.toString(dist[0].getPoints()));
+        System.out.println(TheVector.insideOf(TheVector.getUCHDistance(pols[0], pols[1])));
+        System.out.println(TheVector.insideOf(TheVector.getUCHDistance(pols[1], pols[0])));
+        System.out.println("***");
     }
 }
