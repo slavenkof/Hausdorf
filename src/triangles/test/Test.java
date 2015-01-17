@@ -1,127 +1,163 @@
 package triangles.test;
 
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Random;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.Calendar;
 import triangles.Computer;
 import triangles.Polyangle;
-import triangles.gen.PolGenerator;
-import triangles.gen.UCGenerator;
 import vectors.TheVector;
 
-/**
- * Класс для проведения массового тестирования работоспособности алгоритма
- * оптимизации многоугольников.
- */
 public class Test {
 
-    private final LogLeader leader;
-    private final int seed;
-    private final PolGenerator a;
-    private final PolGenerator b;
-    private final int[] Parametres;
+    private File location;
     private Polyangle A;
     private Polyangle B;
-    private final Random ran;
-    public int TestN = 0;
+    private int solution;
 
-    /**
-     *
-     * @param args
-     * @throws FileNotFoundException
-     */
-    public static void main(String[] args) throws FileNotFoundException {
-        Test test = new Test(892213690, new UCGenerator(), new UCGenerator(),
-                new String[]{"D:/Кольцо/Проект/R/", "D:/Кольцо/Проект/R/Pols/", "D:/Кольцо/Проект/R/EvM/"},
-                new int[]{6, 500, 500});
-        test.initLogs();
-        for (int i = 0; i < 1; i++) {
-            test.TestN++;
-            test.test();
-            test.close();
-        }
-        test.die();
+    public Test() {
+        solution = 1;
     }
 
-    /**
-     * Инициализация объекта-тестировщика.
-     *
-     * @param Seed зерно, используемое для получения случайных чисел в
-     * генераторах.
-     * @param A генератор случайных многоугольников, поставляющий стабильные
-     * многоугольники.
-     * @param B генератор многоугольников, поставляющий движимые многоугольники.
-     * @param paths массив с путями для инициализации менеджера логов.
-     * @param para параметры для генерации многоугольников - максимальное число
-     * вершин, высота и ширина прямоугольника, внутри которого должны находится
-     * все остальные многоугольники.
-     * @throws FileNotFoundException
-     */
-    public Test(int Seed, PolGenerator A, PolGenerator B, String[] paths, int[] para) throws FileNotFoundException {
-        seed = Seed;
-        a = A;
-        b = B;
-        leader = new LogLeader(paths, new String[]{"_PolA", "_PolB", "_EvM"}, new String[]{"Main3", "Imp3"});
-        Parametres = para;
-        ran = new Random(seed);
+    public File getLocation() {
+        return location;
     }
 
-    /**
-     * Проведение очередного теста. В рамках метода выводится индикация на
-     * консоль о старте нового теста, производится генерация двух
-     * многоугольников, оптимизация положения двумя алгоритмами, вывод
-     * информации в логи.
-     *
-     * @throws FileNotFoundException
-     */
-    public void test() throws FileNotFoundException {
-        System.out.println("Test " + TestN);
-        while (A == null) {
-            A = a.gen(Parametres[0], ran.nextInt(), Parametres[1], Parametres[2]);
-        }
-        while (B == null) {
-            B = b.gen(Parametres[0], ran.nextInt(), Parametres[1], Parametres[2]);
-        }
-        leader.prepare(TestN);
-        leader.postPols(A, B);
-        leader.header();
+    public void setLocation(File location) {
+        this.location = location;
+    }
+
+    public void setPathOfFile(String pathOfFile) {
+        setLocation(new File(pathOfFile));
+    }
+
+    public Polyangle getA() {
+        return A;
+    }
+
+    public void setA(Polyangle A) {
+        this.A = A;
+    }
+
+    public Polyangle getB() {
+        return B;
+    }
+
+    public void setB(Polyangle B) {
+        this.B = B;
+    }
+
+    public static Test openTest(File location) {
+        Test test = new Test();
+        test.setLocation(location);
+        test.setA(Polyangle.read(new File(location, "Pols\\A.txt"), false));
+        test.setB(Polyangle.read(new File(location, "Pols\\B.txt"), false));
+        test.solution = new File(location, "Solutions").list().length + 1;
+        return test;
+    }
+
+    public boolean run() throws FileNotFoundException {
+        initFolders();
+        File f = toPols();
+        writePols(f, "");
+        f = toSolution(solution);
+        Log Main = new Log(toMain(f).getAbsolutePath());
+        Long hausStart = Main.timeStamp();
+        Main.post("ROUND_KOEF: " + Double.toString(Computer.ROUND_KOEF));
         Polyangle AA = A.clone();
         Polyangle BB = B.clone();
         Computer.optimize(A, B);
-        System.out.println("Shore");
+        Long hausFinish = Main.getTimeStamp();
+        writePols(f, "haus");
         double Haus = Computer.middle(TheVector.getHDistance(A, B));
-        A = AA;
-        B = BB;
-        Computer.exSearchOptimize(AA, BB, leader.getEvM());
-        System.out.println("Grid");
-        double Grid = Computer.middle(TheVector.getHDistance(AA, BB));
-        leader.postData(Haus, Grid);
-        System.out.println("--------------");
+        Main.post("Haus: " + Double.toString(Haus));
+        Log EvM = new Log(toEvM(f).getAbsolutePath());
+        Long exSearchStart = Main.getTimeStamp();
+        A = AA.clone();
+        B = BB.clone();
+
+        Computer.exSearchOptimize(A, B, EvM);
+        Long exSearchFinish = Main.getTimeStamp();
+        writePols(f, "exs");
+        double Grid = Computer.middle(TheVector.getHDistance(A, B));
+        Main.post("Grid: " + Double.toString(Grid));
+        Main.post("Substraction: " + (Grid - Haus));
+        boolean resultOfTest;
+        if ((Math.abs(Haus - Grid) > Computer.ROUND_KOEF) && (Haus > Grid)) {
+            Main.post("DENIED");
+            resultOfTest = false;
+        } else {
+            Main.post("Accepted");
+            resultOfTest = true;
+        }
+        Main.split();
+        Main.post("TIMING:");
+        Long substrOfTime = hausFinish - hausStart;
+        Calendar Timing = new Calendar.Builder().setInstant(substrOfTime).build();
+        Main.post("Haus: "
+                + (Timing.get(Calendar.HOUR_OF_DAY) - 5) + "h "
+                + Timing.get(Calendar.MINUTE) + "min "
+                + Timing.get(Calendar.SECOND) + "sec "
+                + Timing.get(Calendar.MILLISECOND) + "msec");
+        substrOfTime = exSearchFinish - exSearchStart;
+        Timing = new Calendar.Builder().setInstant(substrOfTime).build();
+        Main.post("Grid: "
+                + (Timing.get(Calendar.HOUR_OF_DAY) - 5) + "h "
+                + Timing.get(Calendar.MINUTE) + "min "
+                + Timing.get(Calendar.SECOND) + "sec "
+                + Timing.get(Calendar.MILLISECOND) + "msec");
+        EvM.die();
+        Main.die();
+        return resultOfTest;
     }
 
-    /**
-     * Завершение очередного теста. Финализация теста в менеджере логов,
-     * обнуление текущих многоугольников. Вызывается каждый при завершении
-     * очередного теста.
-     */
-    public void close() {
-        leader.close();
-        A = null;
-        B = null;
+    private void initFolders() {
+        location.mkdirs();
+        if (location.list().length > 2) {
+            throw new RuntimeException("Incorrect test content");
+        }
+        toPols();
+        initSolutions();
+
     }
 
-    /**
-     * Метод для инициализации логов. Проводит все необходимые действия по
-     * подготовке лгов к работе. Вызывается единственный раз при начале работы.
-     */
-    public void initLogs() {
-        leader.postInf(seed, Computer.ROUND_KOEF, Parametres[1], Parametres[2], Parametres[0]);
+    private void initSolutions() {
+        File f = toSolutions();
     }
 
-    /**
-     * Завершение тестирования. Проводит все необходимые действия по завершению
-     * работы, вызывается единожды в момент окончания тестирования.
-     */
-    public void die() {
-        leader.die();
+    private File toPols() {
+        File f = new File(location, "Pols");
+        f.mkdir();
+        return f;
+    }
+
+    private File toSolutions() {
+        File f = new File(location, "solutions");
+        f.mkdir();
+        return f;
+    }
+
+    private File toSolution(int n) {
+        File f = new File(toSolutions(), "Solution№" + Integer.toString(n));
+        f.mkdir();
+        return f;
+    }
+
+    private void writePols(File f, String prefix) throws FileNotFoundException {
+        try (PrintStream out = new PrintStream(new FileOutputStream(new File(f, prefix + "A.txt")))) {
+            out.println(A.toString());
+        }
+        try (PrintStream out = new PrintStream(new FileOutputStream(new File(f, prefix + "B.txt")))) {
+            out.println(B.toString());
+        }
+    }
+
+    private File toEvM(File f) {
+        return new File(f, "EvM.txt");
+    }
+
+    private File toMain(File f) {
+        return new File(f, "Main.txt");
     }
 }
