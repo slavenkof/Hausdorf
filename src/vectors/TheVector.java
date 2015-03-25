@@ -34,6 +34,23 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
     private double SqVLength;
     private boolean LCounted;
     private boolean SqLCounted;
+    private TheVector subst;
+
+    /**
+     * Заменяет текущий вектор на вектор подстановки - реальный ключевой вектор.
+     * В случае с векторами типа B - имеем дело с высотой, опущенной из вершины
+     * угла. С векторами класса M - перпендикуляр к стороне.
+     *
+     */
+    protected void substitute() {
+        vCoords = subst.vCoords;
+        points = subst.points;
+        concretic = subst.concretic;
+        VLength = subst.VLength;
+        SqVLength = subst.SqVLength;
+        LCounted = subst.LCounted;
+        SqLCounted = subst.SqLCounted;
+    }
 
     /**
      * Создает новый вектор, начальная точка которого points[0], а конечная -
@@ -416,11 +433,15 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
 
     /**
      * Метод "переворачивает" вектор - умножает его на -1. Точки при перевороте
-     * вектора, если он был конкретизирован, также меняются местами.
+     * вектора, если он был конкретизирован, также меняются местами. NB: метод
+     * swap() также вызывается для вектора подстановки.
      *
      * @return вектор, равный исходный умножить на -1.
      */
     public TheVector swap() {
+        if (subst != null) {
+            subst.swap();
+        }
         if (concretic) {
             this.points = new Point2D[]{points[1], points[0]};
         }
@@ -693,13 +714,15 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
     }
 
     /**
-     * Получение точек, находящихся на пересечении биссектрис.
+     * Получение точек, находящихся на пересечении биссектрисы (из
+     * <code>stab</code>) со стороной.
      *
      * @param stab до которого ищем расстояния.
      * @param move от которого ищем расстояния.
-     * @return массив точек, пересечения с биссектрисами.
+     * @return двумерный массив точек. [0] - пересечения сторон с биссектрисами.
+     * [1] - вершины углов.
      */
-    private static Point2D[] getBisPoints(Polyangle stab, Polyangle move) {
+    private static Point2D[][] getBisPoints(Polyangle stab, Polyangle move) {
         Point2D sects[][] = stab.breakTo();
         Point2D pairs[][][] = new Point2D[(sects.length * (sects.length - 1)) / 2][2][2];
         int m = 0;
@@ -710,18 +733,29 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
             }
         }
         ArrayList<Point2D> black = new ArrayList<>(pairs.length);
+        ArrayList<Point2D> black2 = new ArrayList<>(pairs.length);
         for (int i = 0; i < pairs.length; i++) {
-            black.addAll(Arrays.asList(Line.getPolIntersection(move, Line.getBis(pairs[i][0], pairs[i][1]))));
+            Point2D intersect[] = Line.getPolIntersection(move, Line.getBis(pairs[i][0], pairs[i][1]));
+            black.addAll(Arrays.asList(intersect));
+            Point2D BPoint = Line.lineSystem(
+                    Line.approximate(pairs[i][0][0], pairs[i][0][1]),
+                    Line.approximate(pairs[i][1][0], pairs[i][1][1]));
+            for (int j = 0; j < intersect.length; j++) {
+                black2.add(BPoint);
+            }
         }
         Iterator<Point2D> itera = black.iterator();
+        Iterator<Point2D> itera2 = black2.iterator();
         while (itera.hasNext()) {
             Point2D p = itera.next();
             if (p == null) {
                 itera.remove();
+                itera2.remove();
             }
         }
-        Point2D points[] = new Point2D[black.size()];
-        black.toArray(points);
+        Point2D points[][] = new Point2D[2][black.size()];
+        black.toArray(points[0]);
+        black2.toArray(points[1]);
         return points;
     }
 //stab - до которого ищем расстояния
@@ -735,10 +769,14 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
      * @return массив векторов, на которых достигаются расстояния.
      */
     public static TheVector[] getBisDistance(Polyangle stab, Polyangle move) {
-        Point2D points[] = TheVector.getBisPoints(stab, move);
+        Point2D points[][] = TheVector.getBisPoints(stab, move);
         TheVector rawDistances[][] = new TheVector[points.length][stab.getQuantOfPoints()];
         for (int i = 0; i < points.length; i++) {
-            rawDistances[i] = TheVector.getUCDistanceVector(stab, points[i]);
+            rawDistances[i] = TheVector.getUCDistanceVector(stab, points[0][i]);
+            TheVector substs[] = TheVector.getUCDistanceVector(stab, points[1][i]);
+            for (int j = 0; j < rawDistances[i].length; j++) {
+                rawDistances[i][j].setSubst(substs[j]);
+            }
         }
         TheVector washedDistances[][] = new TheVector[points.length][];
         for (int i = 0; i < points.length; i++) {
@@ -750,13 +788,14 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
 
     /**
      * Получение точек, находящихся на пересечении медиатрис, возникающих из
-     * <code>move</code> со сторонами <code>stab</code>.
+     * <code>stab</code> со сторонами <code>move</code>.
      *
      * @param stab до которого ищем расстояния.
      * @param move от которого ищем расстояния.
-     * @return массив точек, пересечения с медиатрисами.
+     * @return двухмерный массив точек. [0] - пересечения сторон с медиатрисами.
+     * [1] - основания сответствующих серединных перпендикуляров.
      */
-    private static Point2D[] getMPerpenPoints(Polyangle stab, Polyangle move) {
+    private static Point2D[][] getMPerpenPoints(Polyangle stab, Polyangle move) {
         Point2D points[] = new Point2D[stab.getQuantOfPoints()];
         stab.getApexs().toArray(points);
         Point2D pairs[][] = new Point2D[(points.length * (points.length - 1)) / 2][2];
@@ -768,18 +807,29 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
             }
         }
         ArrayList<Point2D> black = new ArrayList<>(pairs.length);
-        for (int i = 0; i < pairs.length; i++) {
-            black.addAll(Arrays.asList(Line.getPolIntersection(move, Line.getMPerpen(pairs[i]))));
-        }
-        Iterator<Point2D> itera = black.iterator();
-        while (itera.hasNext()) {
-            Point2D p = itera.next();
-            if (p == null) {
-                itera.remove();
+        ArrayList<Point2D> black2 = new ArrayList<>(pairs.length);
+        for (Point2D[] pair : pairs) {
+            Point2D intersections[] = Line.getPolIntersection(move, Line.getMPerpen(pair));
+            black.addAll(Arrays.asList(intersections));
+            Point2D GPoint = new Point2D.Double((pair[0].getX() + pair[1].getX()) / 2,
+                    (pair[0].getY() + pair[1].getY()) / 2);//вычисление основания серединного перпендикуляра
+            for (int i = 0; i < intersections.length; i++) {
+                black2.add(GPoint);
             }
         }
-        Point2D answer[] = new Point2D[black.size()];
-        black.toArray(answer);
+        Iterator<Point2D> itera = black.iterator();
+        Iterator<Point2D> itera2 = black2.iterator();
+        while (itera.hasNext()) {
+            Point2D p = itera.next();
+            itera2.next();
+            if (p == null) {
+                itera.remove();
+                itera2.remove();
+            }
+        }
+        Point2D answer[][] = new Point2D[2][black.size()];
+        black.toArray(answer[0]);
+        black2.toArray(answer[1]);
         return answer;
     }
 //stab - до которого ищем вектора
@@ -793,11 +843,16 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
      * @return массив векторов, на которых достигаются расстояния.
      */
     public static TheVector[] getMPerpenDistance(Polyangle stab, Polyangle move) {
-        Point2D points[] = TheVector.getMPerpenPoints(stab, move);
+        Point2D points[][] = TheVector.getMPerpenPoints(stab, move);
         TheVector rawDistances[][] = new TheVector[points.length][stab.getQuantOfPoints()];
         for (int i = 0; i < points.length; i++) {
-            rawDistances[i] = TheVector.getUCDistanceVector(stab, points[i]);
+            rawDistances[i] = TheVector.getUCDistanceVector(stab, points[0][i]);
+            TheVector substs[] = TheVector.getUCDistanceVector(stab, points[1][i]);
+            for (int j = 0; j < rawDistances[i].length; j++) {
+                rawDistances[i][j].setSubst(substs[j]);
+            }
         }
+
         TheVector washedDistances[][] = new TheVector[points.length][];
         for (int i = 0; i < points.length; i++) {
             washedDistances[i] = TheVector.getMin(rawDistances[i]);
@@ -1012,5 +1067,23 @@ public class TheVector implements Cloneable, Comparable<TheVector> {
             answer = -1;
         }
         return answer;
+    }
+
+    /**
+     * Получение вектора подстановки.
+     *
+     * @return
+     */
+    public TheVector getSubst() {
+        return subst;
+    }
+
+    /**
+     * Ручная установка вектора подстановки.
+     *
+     * @param subst
+     */
+    public void setSubst(TheVector subst) {
+        this.subst = subst;
     }
 }
