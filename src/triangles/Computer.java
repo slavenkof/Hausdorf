@@ -20,6 +20,7 @@ public class Computer {
      * визуализации.
      */
     public static TheVector Haus[];
+    public static long iterations; 
     /**
      * Это поле отвечает за точность расчетов.
      */
@@ -307,6 +308,7 @@ public class Computer {
                 break;
             }
         } while (!TheVector.insideOf(haus));
+        iterations = l;
         System.out.println("Optimized in: " + l);
     }
 
@@ -340,7 +342,12 @@ public class Computer {
             if (haus[0].getVLength() < ROUND_KOEF) {
                 break;
             }
+            if(l>100000) {
+                l=-1;
+                break;
+            }
         } while (!TheVector.insideOf(haus));
+        iterations = l;
         System.out.println("Optimized in: " + l);
     }
 
